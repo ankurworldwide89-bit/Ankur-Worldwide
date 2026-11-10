@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Cormorant, Manrope } from "next/font/google";
 import { Footer, Nav } from "@/components/chrome";
 import { JsonLd } from "@/components/ui";
 import { company } from "@/content/company";
 import "./globals.css";
 
 // next/font downloads these at build time and serves them from our own domain.
-const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const cormorant = Cormorant({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-cormorant" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(company.url),
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${manrope.variable}`}>
       <body className="min-h-screen bg-bg font-body text-fg antialiased">
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-20 focus:bg-action focus:px-4 focus:py-2 focus:text-action-fg">
           Skip to content

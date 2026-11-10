@@ -1,43 +1,121 @@
 @import "tailwindcss";
 
-/* Design tokens: Direction A, "Counter". Contrast on --color-bg: fg 13.9:1, muted 8.4:1, accent 6.3:1. */
+/* Design tokens. Two tones that sections switch between with data-tone="dark" | "light".
+   Contrast (WCAG): dark fg 15.6:1, muted 8.3:1, accent 9.6:1 · light fg 15.4:1, muted 6.6:1, accent 4.9:1. */
 @theme inline {
-  --color-bg: #0f2a1f;
-  --color-fg: #f4efe6;
-  --color-muted: #b9c2b6;
-  --color-line: #2c4a3b;
-  --color-accent: #c2a15a;
-  --color-action: #f4efe6;
-  --color-action-fg: #0f2a1f;
-  --font-display: var(--font-fraunces), Georgia, serif;
-  --font-body: var(--font-inter), system-ui, sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-action: var(--action);
+  --color-action-fg: var(--action-fg);
+  --color-ember: #e0672f;
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-body: var(--font-manrope), system-ui, sans-serif;
+}
+
+:root,
+[data-tone="dark"] {
+  --bg: #120d0b;
+  --surface: #1d1613;
+  --fg: #f4ecdf;
+  --muted: #b8ab99;
+  --line: #3a2e27;
+  --accent: #e2b25c;
+  --action: #e2b25c;
+  --action-fg: #120d0b;
+}
+
+[data-tone="light"] {
+  --bg: #f4ecdf;
+  --surface: #fbf6ec;
+  --fg: #1a1310;
+  --muted: #5f5348;
+  --line: #d8cbb6;
+  --accent: #8f5a14;
+  --action: #1a1310;
+  --action-fg: #f4ecdf;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fine paper grain over the whole page. A tiny repeating tile, so it costs nothing to paint. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .display {
   font-family: var(--font-display);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: -0.015em;
-  line-height: 1.04;
+  line-height: 0.98;
   text-wrap: balance;
 }
 
+/* Emphasis inside headlines: italic, gold to ember. */
+.gilt {
+  font-style: italic;
+  background: linear-gradient(100deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #e0672f));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  padding-right: 0.08em; /* italic overhang would otherwise be clipped */
+}
+
+.outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--accent);
+}
+
 .eyebrow {
-  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: var(--color-accent);
+  letter-spacing: 0.26em;
+  color: var(--accent);
+}
+.eyebrow::before {
+  content: "";
+  width: 2.5rem;
+  height: 1px;
+  background: currentColor;
+}
+
+/* Lattice ("jaali") border strip. */
+.jaali {
+  height: 20px;
+  opacity: 0.55;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' fill='none' stroke='%23e2b25c'%3E%3Cpath d='M0 10 10 0l10 10-10 10ZM20 10 30 0l10 10-10 10Z'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Ccircle cx='30' cy='10' r='2'/%3E%3C/svg%3E")
+    repeat-x center;
+}
+
+.glow {
+  background: radial-gradient(closest-side, color-mix(in srgb, #e0672f 38%, transparent), transparent);
 }
 
 .prose-legal h2 {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 1.9rem;
   margin-top: 3rem;
   color: var(--color-fg);
 }
 .prose-legal p,
 .prose-legal ul {
   margin-top: 1rem;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 .prose-legal ul {
   list-style: disc;
@@ -50,28 +128,115 @@
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
-/* Scroll reveal for the About chapters. Content is fully visible without it. */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* ---------- Motion. Everything below is decoration: the site reads fully without it. ---------- */
 @media (prefers-reduced-motion: no-preference) {
+  /* Incense smoke: each strand draws itself upward, fades out, and sways. */
+  .smoke path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transform-box: view-box;
+    transform-origin: 200px 560px;
+    animation:
+      smoke-rise 11s linear infinite,
+      smoke-sway 7s ease-in-out infinite alternate;
+  }
+  .smoke path:nth-child(2) {
+    animation-duration: 14s, 9s;
+    animation-delay: -5s, -2s;
+  }
+  .smoke path:nth-child(3) {
+    animation-duration: 17s, 11s;
+    animation-delay: -9s, -4s;
+  }
+  @keyframes smoke-rise {
+    0% {
+      stroke-dashoffset: 1;
+      opacity: 0;
+    }
+    12% {
+      opacity: 1;
+    }
+    70% {
+      opacity: 0.85;
+    }
+    100% {
+      stroke-dashoffset: -1;
+      opacity: 0;
+    }
+  }
+  @keyframes smoke-sway {
+    from {
+      transform: skewX(-5deg) scaleX(0.85);
+    }
+    to {
+      transform: skewX(6deg) scaleX(1.2);
+    }
+  }
+
+  .ember {
+    animation: ember 2.4s ease-in-out infinite alternate;
+  }
+  @keyframes ember {
+    from {
+      opacity: 0.55;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .spin-slow {
+    animation: spin 240s linear infinite;
+  }
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .marquee > div {
+    animation: marquee 45s linear infinite;
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Scroll reveal, where the browser supports scroll-driven animation. */
   @supports (animation-timeline: view()) {
     @keyframes reveal {
       from {
         opacity: 0;
-        transform: translateY(1.5rem);
+        transform: translateY(2.5rem);
       }
     }
     .reveal {
       animation: reveal linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 60%;
+      animation-range: entry 0% entry 55%;
     }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .smoke path {
+    opacity: 0.7;
+  }
   * {
     transition: none !important;
   }

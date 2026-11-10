@@ -16,8 +16,8 @@ export default function OgImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 80,
-          background: "#0f2a1f",
-          color: "#f4efe6",
+          background: "#120d0b",
+          color: "#f4ecdf",
         }}
       >
         <div style={{ display: "flex", fontSize: 28, letterSpacing: 10 }}>
@@ -27,7 +27,7 @@ export default function OgImage() {
         <div style={{ display: "flex", fontSize: 92, lineHeight: 1.05, maxWidth: 900 }}>
           From one shop counter to the world.
         </div>
-        <div style={{ display: "flex", fontSize: 24, letterSpacing: 6, color: "#c2a15a" }}>
+        <div style={{ display: "flex", fontSize: 24, letterSpacing: 6, color: "#e2b25c" }}>
           IMPORT · EXPORT · GUJARAT, INDIA
         </div>
       </div>

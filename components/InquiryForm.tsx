@@ -17,7 +17,7 @@ declare global {
 
 const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
-const field = "mt-2 w-full border-b border-muted bg-bg py-3 text-fg";
+const field = "mt-2 w-full border-b border-muted bg-transparent py-3 text-base text-fg [&>option]:bg-surface";
 const messages = {
   verify: "Please complete the verification below, then send again.",
   limited: "Too many inquiries from your network. Please try again in an hour, or email us.",
@@ -88,7 +88,7 @@ export function InquiryForm({ products, email }: { products: { slug: string; nam
 
   if (state === "sent") {
     return (
-      <div role="status" className="border border-accent p-8">
+      <div role="status" className="rounded-[2rem] border border-accent p-8">
         <h2 className="display text-3xl">Thank you. Your inquiry is with us.</h2>
         <p className="mt-4 text-muted">We reply by email, usually within business hours (IST).</p>
       </div>
@@ -169,7 +169,7 @@ export function InquiryForm({ products, email }: { products: { slug: string; nam
         <button
           type="submit"
           disabled={state === "sending"}
-          className="bg-action px-8 py-4 text-sm font-medium text-action-fg transition-opacity hover:opacity-85 disabled:opacity-60"
+          className="rounded-full bg-action px-8 py-4 text-sm font-bold tracking-wide text-action-fg transition-shadow hover:shadow-[0_0_44px_-6px_var(--accent)] disabled:opacity-60"
         >
           {state === "sending" ? "Sending…" : "Send inquiry"}
         </button>

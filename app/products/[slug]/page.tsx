@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { IncenseBundle } from "@/components/art";
 import { Button, ImageSlot, JsonLd } from "@/components/ui";
 import { company } from "@/content/company";
 import { products } from "@/content/products";
@@ -43,7 +44,7 @@ export default async function ProductPage(props: Props) {
   const url = `${company.url}/products/${p.slug}`;
 
   return (
-    <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 md:px-10 md:pb-36 md:pt-16">
+    <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 md:px-10 md:pb-36 md:pt-14">
       <nav aria-label="Breadcrumb" className="text-sm text-muted">
         <Link href="/" className="hover:text-fg">
           Home
@@ -58,26 +59,34 @@ export default async function ProductPage(props: Props) {
         </span>
       </nav>
 
-      <div className="mt-12 grid gap-12 md:grid-cols-2 md:gap-20">
-        <ImageSlot name={p.image} priority />
+      <div className="mt-10 grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <ImageSlot name={p.image} priority fallback={<IncenseBundle className="absolute inset-0 size-full p-10" />} />
+        </div>
         <div>
           <p className="eyebrow">{role}</p>
-          <h1 className="display mt-6 text-[clamp(2.5rem,6vw,5rem)]">{p.name}</h1>
+          <h1 className="display mt-6 text-[clamp(3.5rem,8vw,7rem)]">
+            {p.name}
+            {p.localName && <span className="gilt block text-[0.55em]">{p.localName}</span>}
+          </h1>
           {p.description.map((para) => (
             <p key={para} className="mt-6 max-w-md text-lg leading-relaxed text-muted">
               {para}
             </p>
           ))}
-          <dl className="mt-12 border-t border-line">
+          <dl className="mt-12 overflow-hidden rounded-3xl border border-line bg-surface px-6">
             {specs.map(([k, v]) => (
-              <div key={k} className="grid grid-cols-5 gap-4 border-b border-line py-4 text-sm">
+              <div key={k} className="grid grid-cols-5 gap-4 border-b border-line py-5 text-sm last:border-b-0">
                 <dt className="col-span-2 text-muted">{k}</dt>
                 <dd className="col-span-3">{v}</dd>
               </div>
             ))}
           </dl>
-          <div className="mt-12">
+          <div className="mt-12 flex flex-wrap gap-4">
             <Button href={`/contact?product=${p.slug}`}>Inquire about this product</Button>
+            <Button href="/contact?documents=1" variant="ghost">
+              Request documents
+            </Button>
           </div>
         </div>
       </div>

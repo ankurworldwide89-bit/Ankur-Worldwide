@@ -1,11 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { images } from "@/content/images/manifest";
+import { Mandala } from "./art";
 
 const buttonStyles = {
   primary:
-    "inline-block bg-action px-8 py-4 text-sm font-medium text-action-fg transition-opacity hover:opacity-85",
-  text: "border-b border-accent pb-0.5 text-sm",
+    "inline-flex items-center gap-3 rounded-full bg-action px-8 py-4 text-sm font-bold tracking-wide text-action-fg transition-shadow hover:shadow-[0_0_44px_-6px_var(--accent)]",
+  ghost:
+    "inline-flex items-center gap-3 rounded-full border border-line px-8 py-4 text-sm font-semibold tracking-wide transition-colors hover:border-accent hover:text-accent",
+  text: "border-b border-accent pb-0.5 text-sm font-semibold transition-colors hover:text-accent",
 };
 
 export function Button({
@@ -20,59 +23,67 @@ export function Button({
   return (
     <Link href={href} className={buttonStyles[variant]}>
       {children}
+      {variant !== "text" && <span aria-hidden="true">→</span>}
     </Link>
   );
 }
 
+// A full-width band. `tone` flips the whole colour scheme for that band.
 export function Section({
+  tone = "dark",
   eyebrow,
   title,
   children,
+  id,
 }: {
+  tone?: "dark" | "light";
   eyebrow?: string;
-  title?: string;
+  title?: React.ReactNode;
   children?: React.ReactNode;
+  id?: string;
 }) {
   return (
-    <section className="border-t border-line">
-      <div className="mx-auto max-w-7xl px-6 py-20 md:px-10 md:py-32">
-        {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        {title && <h2 className="display mt-6 max-w-3xl text-4xl md:text-6xl">{title}</h2>}
+    <section id={id} data-tone={tone} className="relative overflow-hidden bg-bg text-fg">
+      <div className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-36">
+        {eyebrow && <p className="eyebrow reveal">{eyebrow}</p>}
+        {title && <h2 className="display reveal mt-6 max-w-4xl text-5xl md:text-7xl">{title}</h2>}
         {children}
       </div>
     </section>
   );
 }
 
-export function PageHeader({ eyebrow, title, intro }: { eyebrow: string; title: string; intro?: string }) {
+export function PageHeader({ eyebrow, title, intro }: { eyebrow: string; title: React.ReactNode; intro?: string }) {
   return (
-    <div className="mx-auto max-w-7xl px-6 pb-20 pt-16 md:px-10 md:pb-28 md:pt-28">
-      <p className="eyebrow">{eyebrow}</p>
-      <h1 className="display mt-8 max-w-4xl text-[clamp(2.5rem,7vw,5.5rem)]">{title}</h1>
-      {intro && <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted">{intro}</p>}
+    <div className="relative overflow-hidden">
+      <div className="glow absolute -right-40 -top-40 size-[44rem]" aria-hidden="true" />
+      <Mandala className="absolute -right-48 -top-48 size-[46rem] text-accent opacity-25 md:-right-32" />
+      <div className="relative mx-auto max-w-7xl px-6 pb-24 pt-20 md:px-10 md:pb-36 md:pt-32">
+        <p className="eyebrow">{eyebrow}</p>
+        <h1 className="display mt-8 max-w-4xl text-[clamp(3.25rem,9vw,7.5rem)]">{title}</h1>
+        {intro && <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted md:text-xl">{intro}</p>}
+      </div>
+      <div className="jaali" aria-hidden="true" />
     </div>
   );
 }
 
 const ratios = { "4/5": "aspect-[4/5]", "3/2": "aspect-[3/2]" };
 
-// Fixed-ratio image slot. Shows the photo from the manifest, or a quiet placeholder until one exists.
-export function ImageSlot({ name, priority }: { name: string; priority?: boolean }) {
+// Fixed-ratio image slot. Shows the photo from the manifest; until one exists, shows `fallback` art.
+export function ImageSlot({ name, priority, fallback }: { name: string; priority?: boolean; fallback: React.ReactNode }) {
   const slot = images[name];
   if (!slot) throw new Error(`Unknown image slot "${name}" (see content/images/manifest.ts)`);
-  if (slot.src) {
-    return (
-      <div className={`relative overflow-hidden ${ratios[slot.ratio]}`}>
-        <Image src={slot.src} alt={slot.alt} fill priority={priority} sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
-      </div>
-    );
-  }
   return (
-    <div
-      aria-hidden="true"
-      className={`flex items-end border border-line bg-line/30 p-6 text-xs uppercase tracking-[0.2em] text-muted ${ratios[slot.ratio]}`}
-    >
-      {process.env.NODE_ENV !== "production" && "Photography coming soon"}
+    <div className={`relative overflow-hidden rounded-[2rem] border border-line bg-surface ${ratios[slot.ratio]}`}>
+      {slot.src ? (
+        <Image src={slot.src} alt={slot.alt} fill priority={priority} sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+      ) : (
+        <>
+          <div className="glow absolute inset-0 m-auto size-4/5" aria-hidden="true" />
+          {fallback}
+        </>
+      )}
     </div>
   );
 }

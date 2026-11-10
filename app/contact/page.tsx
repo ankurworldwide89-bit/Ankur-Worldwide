@@ -22,33 +22,32 @@ export default function Contact() {
     <>
       <PageHeader
         eyebrow="Contact us"
-        title="Send an inquiry."
+        title={<>Send <span className="gilt">an inquiry.</span></>}
         intro="Tell us the product, the quantity and the destination country. We reply by email."
       />
-      <div className="mx-auto grid max-w-7xl gap-16 border-t border-line px-6 pb-24 pt-16 md:px-10 md:pb-36 lg:grid-cols-12">
-        <div className="lg:col-span-7">
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 md:px-10 md:py-28 lg:grid-cols-12">
+        <div className="rounded-[2rem] border border-line bg-surface p-6 md:p-12 lg:col-span-8">
+          <h2 className="display mb-10 text-4xl md:text-5xl">Your requirement</h2>
           <InquiryForm products={products.map(({ slug, name }) => ({ slug, name }))} email={company.email} />
         </div>
-        <div className="lg:col-span-4 lg:col-start-9">
+        <aside className="lg:col-span-4">
           <h2 className="eyebrow">Or reach us directly</h2>
-          <dl className="mt-6 border-t border-line">
+          <dl className="mt-8 space-y-4">
             {rows.map(([k, v, href]) => (
-              <div key={k} className="border-b border-line py-4">
+              <div key={k} className="rounded-3xl border border-line p-6 transition-colors hover:border-accent">
                 <dt className="text-sm text-muted">{k}</dt>
-                <dd className="mt-1 break-words">
-                  <a href={href} className="hover:text-accent">
-                    {v}
-                  </a>
+                <dd className="mt-1 break-words text-lg font-semibold">
+                  <a href={href}>{v}</a>
                 </dd>
               </div>
             ))}
-            <div className="border-b border-line py-4">
+            <div className="rounded-3xl border border-line p-6">
               <dt className="text-sm text-muted">Hours</dt>
-              <dd className="mt-1">{company.hours}</dd>
+              <dd className="mt-1 text-lg font-semibold">{company.hours}</dd>
             </div>
-            <div className="border-b border-line py-4">
+            <div className="rounded-3xl border border-line p-6">
               <dt className="text-sm text-muted">Location</dt>
-              <dd className="mt-1">{company.address ?? company.region}</dd>
+              <dd className="mt-1 text-lg font-semibold">{company.address ?? company.region}</dd>
             </div>
           </dl>
           <p className="mt-8 text-sm text-muted">
@@ -58,7 +57,7 @@ export default function Contact() {
             </a>
             .
           </p>
-        </div>
+        </aside>
       </div>
     </>
   );
