@@ -1,56 +1,78 @@
 @import "tailwindcss";
 
+/* Design tokens: Direction A, "Counter". Contrast on --color-bg: fg 13.9:1, muted 8.4:1, accent 6.3:1. */
 @theme inline {
-  --color-bg: var(--bg);
-  --color-fg: var(--fg);
-  --color-muted: var(--muted);
-  --color-line: var(--line);
-  --color-accent: var(--accent);
-  --color-action: var(--action);
-  --color-action-fg: var(--action-fg);
-  --font-display: var(--display);
-  --font-body: var(--body);
-}
-
-/* Direction A, "Counter": forest ground, serif headlines */
-[data-theme="a"] {
-  --bg: #0f2a1f;
-  --fg: #f4efe6;
-  --muted: #b9c2b6;
-  --line: #2c4a3b;
-  --accent: #c2a15a;
-  --action: #f4efe6;
-  --action-fg: #0f2a1f;
-  --display: var(--font-fraunces);
-  --body: var(--font-inter);
-  --display-weight: 400;
-  --display-tracking: -0.015em;
-}
-
-/* Direction B, "Ledger": off-white ground, grotesk headlines */
-[data-theme="b"] {
-  --bg: #f6f2ea;
-  --fg: #1d1f1e;
-  --muted: #5c605c;
-  --line: #d9d2c3;
-  --accent: #7a5f26;
-  --action: #123524;
-  --action-fg: #f6f2ea;
-  --display: var(--font-geist);
-  --body: var(--font-geist);
-  --display-weight: 600;
-  --display-tracking: -0.045em;
+  --color-bg: #0f2a1f;
+  --color-fg: #f4efe6;
+  --color-muted: #b9c2b6;
+  --color-line: #2c4a3b;
+  --color-accent: #c2a15a;
+  --color-action: #f4efe6;
+  --color-action-fg: #0f2a1f;
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
 }
 
 .display {
-  font-family: var(--display);
-  font-weight: var(--display-weight);
-  letter-spacing: var(--display-tracking);
-  line-height: 1.02;
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
   text-wrap: balance;
 }
 
+.eyebrow {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--color-accent);
+}
+
+.prose-legal h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  margin-top: 3rem;
+  color: var(--color-fg);
+}
+.prose-legal p,
+.prose-legal ul {
+  margin-top: 1rem;
+  line-height: 1.7;
+}
+.prose-legal ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.prose-legal a {
+  color: var(--color-fg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 :focus-visible {
-  outline: 2px solid var(--accent, currentColor);
+  outline: 2px solid var(--color-accent);
   outline-offset: 3px;
+}
+
+/* Scroll reveal for the About chapters. Content is fully visible without it. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(1.5rem);
+      }
+    }
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }

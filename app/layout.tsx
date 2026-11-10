@@ -1,21 +1,45 @@
 import type { Metadata } from "next";
-import { Fraunces, Geist, Inter } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
+import { Footer, Nav } from "@/components/chrome";
+import { JsonLd } from "@/components/ui";
+import { company } from "@/content/company";
 import "./globals.css";
 
 // next/font downloads these at build time and serves them from our own domain.
 const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
 export const metadata: Metadata = {
-  title: "Ankur Worldwide",
-  robots: { index: false }, // mockup stage: keep out of search engines
+  metadataBase: new URL(company.url),
+  title: { default: "Ankur Worldwide — Manufacturer and Exporter, India", template: "%s — Ankur Worldwide" },
+  description:
+    "Ankur Worldwide is the fourth generation of a Gujarat trading family, manufacturing and exporting incense sticks from India to buyers worldwide.",
+  openGraph: { siteName: company.name, type: "website", locale: "en" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable} ${geist.variable}`}>
-      <body className="antialiased">{children}</body>
+    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+      <body className="min-h-screen bg-bg font-body text-fg antialiased">
+        <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-20 focus:bg-action focus:px-4 focus:py-2 focus:text-action-fg">
+          Skip to content
+        </a>
+        <Nav />
+        <main id="main">{children}</main>
+        <Footer />
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: company.name,
+            url: company.url,
+            email: company.email,
+            telephone: company.phone,
+            founder: { "@type": "Person", name: company.proprietor },
+            address: { "@type": "PostalAddress", addressRegion: "Gujarat", addressCountry: "IN" },
+          }}
+        />
+      </body>
     </html>
   );
 }
