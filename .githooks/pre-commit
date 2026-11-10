@@ -1,0 +1,9 @@
+#!/bin/sh
+# Blocks a commit that contains a password, key or token.
+# Enabled by `npm install` (which runs: git config core.hooksPath .githooks).
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact --no-banner
+else
+  echo "warning: gitleaks is not installed, so this commit was not scanned for secrets."
+  echo "         Install it (see SECURITY-CHECKLIST.md). GitHub scans every push either way."
+fi

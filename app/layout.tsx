@@ -27,6 +27,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main id="main">{children}</main>
         <Footer />
+        {/* Vercel Web Analytics: cookieless, served from our own domain. Only exists on Vercel. */}
+        {process.env.VERCEL && <script defer src="/_vercel/insights/script.js" />}
         <JsonLd
           data={{
             "@context": "https://schema.org",

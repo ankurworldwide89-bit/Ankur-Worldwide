@@ -13,7 +13,7 @@ const links = [
 export function Nav() {
   return (
     <header className="relative mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:px-10">
-      <Link href="/" aria-label="Ankur Worldwide, home">
+      <Link href="/">
         <Logo className="h-3.5 w-auto md:h-4" />
       </Link>
       <nav aria-label="Main" className="hidden items-center gap-8 text-sm md:flex">
