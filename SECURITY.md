@@ -61,23 +61,23 @@ README.md explains how the build generates and verifies the hashes.
 | Endpoint error replies contain no details (automated test and live request) | Pass |
 | The raw IP address and the Turnstile token are never sent to the database (automated test) | Pass |
 | `npm audit` | 0 known vulnerabilities on 11 November 2026 |
+| SQL script run on the live Supabase project `ankur-worldwide` (Mumbai) | Success |
+| Live database permissions with the public key: read, insert, update, delete and `submit_inquiry()` all refused with "permission denied" (`tests/rls.test.ts`) | Pass, 4 tests |
+| GitHub Actions: CI (incl. gitleaks) and CodeQL | Pass |
 
 ## What could NOT be verified yet
 
 All of these need the live deployment or accounts only the owner can open. DEPLOY.md says when to do each.
 
 1. **A real inquiry end to end** (Turnstile → Supabase → email).
-2. **Database permissions against the real project.** The tests exist (`tests/rls.test.ts`) but skip until
-   `SUPABASE_URL` and `SUPABASE_ANON_KEY` are provided.
-3. **The SQL script itself** has not been run against a database.
-4. **Whether Supabase's newer `sb_secret_…` keys work** with the endpoint as written (it sends the key in
-   both the `apikey` and `Authorization` headers).
+2. **The secret key path.** The public `sb_publishable_…` key was confirmed to work when sent in both the
+   `apikey` and `Authorization` headers, as the endpoint does. The `sb_secret_…` key has not been exercised
+   yet; the first real inquiry proves it.
 5. **CSP hashes on Vercel.** The build verifies them, but if Vercel or Cloudflare changes the HTML after the
    build (for example Cloudflare's email obfuscation, Rocket Loader or automatic script injection), pages
    would break. DEPLOY.md turns those features off; check the browser console after deploying.
 6. **securityheaders.com, SSL Labs and Mozilla Observatory grades.** Targets are A+, A+ and a pass.
 7. **Cloudflare settings** (TLS mode, WAF, bot protection, rate-limit rule), **DNSSEC, CAA, SPF, DKIM, DMARC.**
-8. **GitHub Actions workflows** have not run yet; they run on the first push.
 9. **Vercel Web Analytics** loading and counting page changes correctly.
 
 ## Known limits
