@@ -23,9 +23,9 @@ export default function Products() {
           <Link
             key={p.slug}
             href={`/products/${p.slug}`}
-            className="reveal group relative overflow-hidden rounded-[2rem] border border-line bg-surface transition-colors hover:border-accent"
+            className="card3d group relative overflow-hidden rounded-[2rem] border border-line bg-surface"
           >
-            <div className="relative aspect-[4/3] overflow-hidden">
+            <div data-tone="dark" className="relative aspect-[4/3] overflow-hidden bg-bg">
               <div className="glow absolute inset-0 m-auto size-4/5" aria-hidden="true" />
               <IncenseBundle className="absolute inset-0 size-full p-8 transition-transform duration-700 group-hover:scale-105" />
             </div>
@@ -53,7 +53,7 @@ export default function Products() {
           </div>
         </div>
       </div>
-      <Section tone="light" eyebrow="Imports" title={<>Import categories <span className="gilt">to be announced.</span></>}>
+      <Section tone="sand" eyebrow="Imports" title={<>Import categories <span className="gilt">to be announced.</span></>}>
         <p className="reveal mt-8 max-w-xl text-lg leading-relaxed text-muted">
           Ankur Worldwide trades in both directions. Overseas suppliers are welcome to introduce themselves through the
           inquiry form.

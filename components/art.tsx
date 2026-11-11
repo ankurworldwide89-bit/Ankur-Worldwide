@@ -57,11 +57,12 @@ export function IncenseBundle({ className }: Art) {
   );
 }
 
-// A slowly turning lotus mandala. Background ornament.
+// A slowly turning lotus mandala. The outer box takes position and scroll motion; the inner drawing spins.
 export function Mandala({ className }: Art) {
   const petals = Array.from({ length: 24 }, (_, i) => i * 15);
   return (
-    <svg viewBox="-200 -200 400 400" fill="none" stroke="currentColor" strokeWidth="0.6" aria-hidden="true" className={`spin-slow ${className ?? ""}`}>
+    <div aria-hidden="true" className={className}>
+    <svg viewBox="-200 -200 400 400" fill="none" stroke="currentColor" strokeWidth="0.7" className="spin-slow size-full">
       <circle r="198" />
       <circle r="150" />
       <circle r="92" />
@@ -76,6 +77,7 @@ export function Mandala({ className }: Art) {
         </g>
       ))}
     </svg>
+    </div>
   );
 }
 

@@ -15,8 +15,8 @@ export default function Privacy() {
     <Legal title="Privacy Policy" updated="11 November 2026">
       <h2>Who we are</h2>
       <p>
-        {company.name} is a {company.legalForm.toLowerCase()} based in {company.region}, owned by{" "}
-        {company.proprietor}. We decide how the personal data described here is used. Contact: {mail}.
+        {company.name} is a {company.legalForm.toLowerCase()} based in {company.region}, represented by{" "}
+        {company.signatory}. We decide how the personal data described here is used. Contact: {mail}.
       </p>
 
       <h2>What we collect</h2>

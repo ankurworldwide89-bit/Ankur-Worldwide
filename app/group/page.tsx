@@ -27,7 +27,7 @@ export default function Group() {
           </div>
         </div>
       </div>
-      <Section tone="light">
+      <Section tone="sand">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="reveal">
             <p className="eyebrow">One family, two businesses</p>
@@ -42,7 +42,7 @@ export default function Group() {
               <Button href="/about">Read our story</Button>
             </div>
           </div>
-          <Rings className="reveal mx-auto w-full max-w-80 text-accent" />
+          <Rings className="scroll-turn mx-auto w-full max-w-80 text-accent" />
         </div>
       </Section>
     </>

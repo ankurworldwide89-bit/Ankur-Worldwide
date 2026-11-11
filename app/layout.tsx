@@ -24,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-20 focus:bg-action focus:px-4 focus:py-2 focus:text-action-fg">
           Skip to content
         </a>
+        <div className="progress" aria-hidden="true" />
         <Nav />
         <main id="main">{children}</main>
         <Footer />
@@ -37,7 +38,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             url: company.url,
             email: company.email,
             telephone: company.phone,
-            founder: { "@type": "Person", name: company.proprietor },
             address: { "@type": "PostalAddress", addressRegion: "Gujarat", addressCountry: "IN" },
           }}
         />

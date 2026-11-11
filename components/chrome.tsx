@@ -17,22 +17,19 @@ export function Nav() {
         <Link href="/">
           <Logo className="h-3.5 w-auto md:h-4" />
         </Link>
-        <nav aria-label="Main" className="hidden items-center gap-8 text-sm font-medium lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-8 text-sm font-semibold lg:flex">
           {links.slice(0, 4).map((l) => (
             <Link key={l.href} href={l.href} className="text-muted transition-colors hover:text-accent">
               {l.label}
             </Link>
           ))}
-          <Link
-            href="/contact"
-            className="rounded-full bg-action px-5 py-2.5 font-bold text-action-fg transition-shadow hover:shadow-[0_0_30px_-6px_var(--accent)]"
-          >
+          <Link href="/contact" className="press rounded-full bg-action px-5 py-2.5 font-bold text-action-fg">
             Send an inquiry
           </Link>
         </nav>
         {/* Mobile menu with no JavaScript: a native disclosure element. */}
         <details className="lg:hidden">
-          <summary className="cursor-pointer rounded-full border border-line px-4 py-2 text-sm font-semibold">Menu</summary>
+          <summary className="cursor-pointer rounded-full border border-fg/30 px-4 py-2 text-sm font-semibold">Menu</summary>
           <nav aria-label="Main" className="absolute inset-x-0 top-full border-y border-line bg-bg px-6 py-4">
             {links.map((l) => (
               <Link key={l.href} href={l.href} className="display block py-3 text-3xl">
@@ -48,7 +45,7 @@ export function Nav() {
 
 export function Footer() {
   return (
-    <footer className="overflow-hidden border-t border-line">
+    <footer data-tone="dark" className="overflow-hidden bg-bg text-fg">
       <div className="jaali" aria-hidden="true" />
       <div className="mx-auto grid max-w-7xl gap-12 px-6 pb-10 pt-20 md:grid-cols-12 md:px-10">
         <div className="md:col-span-5">
@@ -74,10 +71,10 @@ export function Footer() {
             {company.phoneDisplay}
           </a>
           <p className="text-muted">{company.hours}</p>
-          <p className="text-muted">{company.region}</p>
+          <p className="text-muted">{company.address ?? company.region}</p>
         </div>
       </div>
-      <p aria-hidden="true" className="display outline-text select-none whitespace-nowrap text-center text-[15vw] leading-none opacity-40">
+      <p aria-hidden="true" className="display outline-text reveal select-none whitespace-nowrap text-center text-[15vw] leading-none opacity-50">
         Ankur Worldwide
       </p>
       <p className="mx-auto max-w-7xl px-6 py-8 text-xs text-muted md:px-10">

@@ -4,7 +4,7 @@ import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 
 type Turnstile = {
-  render(el: HTMLElement, options: { sitekey: string; theme: "dark" }): string;
+  render(el: HTMLElement, options: { sitekey: string; theme: "light" }): string;
   getResponse(id: string): string | undefined;
   reset(id: string): void;
   remove(id: string): void;
@@ -47,7 +47,7 @@ export function InquiryForm({ products, email }: { products: { slug: string; nam
 
   function mountTurnstile() {
     if (window.turnstile && box.current && !widget.current) {
-      widget.current = window.turnstile.render(box.current, { sitekey: siteKey!, theme: "dark" });
+      widget.current = window.turnstile.render(box.current, { sitekey: siteKey!, theme: "light" });
     }
   }
 
@@ -90,7 +90,7 @@ export function InquiryForm({ products, email }: { products: { slug: string; nam
     return (
       <div role="status" className="rounded-[2rem] border border-accent p-8">
         <h2 className="display text-3xl">Thank you. Your inquiry is with us.</h2>
-        <p className="mt-4 text-muted">We reply by email, usually within business hours (IST).</p>
+        <p className="mt-4 text-muted">We reply by email.</p>
       </div>
     );
   }
@@ -169,7 +169,7 @@ export function InquiryForm({ products, email }: { products: { slug: string; nam
         <button
           type="submit"
           disabled={state === "sending"}
-          className="rounded-full bg-action px-8 py-4 text-sm font-bold tracking-wide text-action-fg transition-shadow hover:shadow-[0_0_44px_-6px_var(--accent)] disabled:opacity-60"
+          className="press rounded-full bg-action px-8 py-4 text-sm font-bold tracking-wide text-action-fg disabled:opacity-60"
         >
           {state === "sending" ? "Sending…" : "Send inquiry"}
         </button>

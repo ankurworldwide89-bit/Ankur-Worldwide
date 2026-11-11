@@ -16,7 +16,7 @@ const art = [
     <Arch className="absolute left-0 top-6 h-64 text-accent opacity-50" />
     <Arch className="absolute right-0 top-0 h-72 text-accent" />
   </div>,
-  <Rings key="3" className="mx-auto w-full max-w-72 text-accent" />,
+  <Rings key="3" className="scroll-turn mx-auto w-full max-w-72 text-accent" />,
   <Routes key="4" className="mx-auto w-full max-w-md text-accent" />,
 ];
 
@@ -41,13 +41,13 @@ export default function About() {
                 <h2 className="display mt-4 text-5xl md:text-7xl">{c.title}</h2>
                 <p className={`mt-6 max-w-md text-lg leading-relaxed text-muted ${i % 2 ? "" : "md:ml-auto"}`}>{c.body}</p>
               </div>
-              <div className={i % 2 ? "md:col-start-1 md:row-start-1" : ""}>{art[i]}</div>
+              <div className={`tilt-in ${i % 2 ? "md:col-start-1 md:row-start-1" : ""}`}>{art[i]}</div>
             </li>
           ))}
         </ol>
       </div>
-      <section className="relative overflow-hidden border-t border-line">
-        <Mandala className="pointer-events-none absolute inset-0 m-auto size-[56rem] max-w-none text-accent opacity-20" />
+      <section data-tone="dark" className="relative overflow-hidden bg-bg text-fg">
+        <Mandala className="scroll-turn pointer-events-none absolute inset-0 m-auto size-[56rem] max-w-none text-accent opacity-20" />
         <div className="relative mx-auto max-w-4xl px-6 py-32 text-center md:py-44">
           <h2 className="display reveal text-[clamp(3rem,8vw,7rem)]">
             The next chapter <span className="gilt">is with you.</span>

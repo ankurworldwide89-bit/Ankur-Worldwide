@@ -1,28 +1,52 @@
 # Still needed from the owner
 
-The site works without these. Each missing item is simply left off the page, never guessed.
-CONTENT-GUIDE.md explains where each value goes.
+The site works without these. CONTENT-GUIDE.md explains where each value goes.
 
-## Facts
+## Received
 
-| Item | Where it appears | Why it matters |
-|---|---|---|
-| IEC number | Home, Compliance | The main thing an overseas buyer can verify |
-| GSTIN | Home, Compliance | Same |
-| Registered address (as on GST certificate) | Compliance, Contact | Buyers and banks check it |
-| Other registrations actually held (Udyam, RCMC, FSSAI, ISO) | Compliance | Only if held |
-| Incense sticks: fragrances, stick length, burn time | Product page | Buyers ask first |
-| Incense sticks: pack sizes, carton sizes | Product page | |
-| Incense sticks: minimum order quantity | Product page | |
-| Incense sticks: HS code used on your shipping documents (commonly 3307.41.00, to be confirmed by you) | Product page | |
-| Incense sticks: private label yes or no | Product page | |
-| Business days for the 8 am to 8 pm hours | Contact | |
-| Store founding year, if the family wants it shown | About, Group | Optional |
+- IEC: ACPFA4509F (from the DGFT certificate, 25 August 2026).
+- Registered address and legal form (Partnership), copied from the same certificate.
+- Hours: open 24 hours for orders and inquiries.
+
+## To confirm
+
+The IEC certificate says the firm is a **Partnership**. The owner had earlier described it as a
+proprietorship. The site follows the certificate and shows Mufaddal Akil Kapadiya as "Authorised signatory".
+Tell us if the wording should be different (for example "Partner").
+
+An IEC number is the same as the firm's PAN. It is published because IECs are public and buyers verify them,
+but it is never labelled as a PAN on the site. No personal PAN, Aadhaar, bank detail or certificate scan is
+in this repository.
+
+## Generic product details to replace
+
+At the owner's request the incense sticks page currently shows **generic** details. Replace each with the
+real value in `content/products/incense-sticks.ts`:
+
+| Field | Shown now |
+|---|---|
+| Type | Hand-rolled and machine-made bamboo-core incense sticks |
+| Fragrances | Floral, woody, herbal and traditional fragrances, or your own |
+| Stick length | Common export sizes such as 8 inch and 9 inch, or to your requirement |
+| Burn time | Depends on stick size and blend; confirmed with your sample |
+| Packaging | Pouches, printed boxes, hexagonal tubes, bulk export cartons |
+| Minimum order | Confirmed with your quotation |
+| HS code | 3307.41.00 (confirm against your shipping documents) |
+| Private label | Not shown until confirmed |
+
+## Still missing
+
+| Item | Where it appears |
+|---|---|
+| GSTIN | Home, Compliance |
+| Other registrations actually held (Udyam, RCMC, FSSAI, ISO) | Compliance |
+| Store founding year, if the family wants it shown | About, Group |
 
 ## To read and correct
 
-- The four About chapters in `content/about.ts`. They are deliberately brief because no dates or names were supplied.
-- Confirm that Mufaddal Akil Kapadiya is to be shown as proprietor of Ankur Worldwide.
+- The four About chapters in `content/about.ts`.
+- The promises on the home page: samples before quotation, everything confirmed in writing, fragrance and
+  packaging to the buyer's specification.
 - Privacy policy: the 24-month retention period for inquiries.
 - Terms: "courts of Gujarat, India" as jurisdiction.
 
@@ -39,6 +63,5 @@ CONTENT-GUIDE.md explains where each value goes.
 
 ## Recommended
 
-- A mailbox on the domain (for example `info@ankurworldwide.com`). A Gmail address looks less established
-  to overseas buyers. See DEPLOY.md, step 9.
+- A mailbox on the domain (for example `info@ankurworldwide.com`). See DEPLOY.md, step 9.
 - The final AW monogram, as an SVG file.

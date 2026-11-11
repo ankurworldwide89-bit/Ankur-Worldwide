@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
-/* Design tokens. Two tones that sections switch between with data-tone="dark" | "light".
-   Contrast (WCAG): dark fg 15.6:1, muted 8.3:1, accent 9.6:1 · light fg 15.4:1, muted 6.6:1, accent 4.9:1. */
+/* Design tokens. The page is light by default; bands switch scheme with data-tone="light" | "sand" | "dark".
+   Contrast (WCAG): light fg 15.4:1, muted 6.6:1, accent 4.9:1 · sand fg 13.6:1, muted 6.4:1, accent 5.1:1
+   · dark fg 15.6:1, muted 8.3:1, accent 9.6:1. */
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -17,26 +18,41 @@
 }
 
 :root,
-[data-tone="dark"] {
-  --bg: #120d0b;
-  --surface: #1d1613;
-  --fg: #f4ecdf;
-  --muted: #b8ab99;
-  --line: #3a2e27;
-  --accent: #e2b25c;
-  --action: #e2b25c;
-  --action-fg: #120d0b;
-}
-
 [data-tone="light"] {
-  --bg: #f4ecdf;
-  --surface: #fbf6ec;
+  --bg: #f7f1e6;
+  --surface: #fffaf0;
   --fg: #1a1310;
   --muted: #5f5348;
-  --line: #d8cbb6;
+  --line: #dccfb9;
   --accent: #8f5a14;
   --action: #1a1310;
-  --action-fg: #f4ecdf;
+  --action-fg: #f7f1e6;
+}
+
+[data-tone="sand"] {
+  --bg: #ebe0cc;
+  --surface: #f6eedd;
+  --fg: #1a1310;
+  --muted: #574b40;
+  --line: #d2c3a8;
+  --accent: #84510f;
+  --action: #1a1310;
+  --action-fg: #f7f1e6;
+}
+
+[data-tone="dark"] {
+  --bg: #1b1410;
+  --surface: #261c17;
+  --fg: #f7f1e6;
+  --muted: #c2b5a3;
+  --line: #45372e;
+  --accent: #e2b25c;
+  --action: #e2b25c;
+  --action-fg: #1b1410;
+}
+
+body {
+  overflow-x: clip; /* 3D-tilted panels must never cause sideways scrolling */
 }
 
 html {
@@ -50,8 +66,9 @@ body::before {
   inset: 0;
   z-index: 50;
   pointer-events: none;
-  opacity: 0.07;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.1;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .7 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 .display {
@@ -82,7 +99,7 @@ body::before {
   align-items: center;
   gap: 0.9rem;
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.26em;
   color: var(--accent);
@@ -97,13 +114,74 @@ body::before {
 /* Lattice ("jaali") border strip. */
 .jaali {
   height: 20px;
-  opacity: 0.55;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' fill='none' stroke='%23e2b25c'%3E%3Cpath d='M0 10 10 0l10 10-10 10ZM20 10 30 0l10 10-10 10Z'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Ccircle cx='30' cy='10' r='2'/%3E%3C/svg%3E")
+  opacity: 0.7;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' fill='none' stroke='%23b8862f'%3E%3Cpath d='M0 10 10 0l10 10-10 10ZM20 10 30 0l10 10-10 10Z'/%3E%3Ccircle cx='10' cy='10' r='2'/%3E%3Ccircle cx='30' cy='10' r='2'/%3E%3C/svg%3E")
     repeat-x center;
 }
 
 .glow {
-  background: radial-gradient(closest-side, color-mix(in srgb, #e0672f 38%, transparent), transparent);
+  background: radial-gradient(closest-side, color-mix(in srgb, #e0672f 34%, transparent), transparent);
+}
+
+/* Scroll progress bar under the header. Hidden unless the browser can tie it to scrolling. */
+.progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 3px;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #e2b25c, #e0672f);
+}
+
+/* Buttons and cards: lift on hover, press in on click, with a flash of light from the centre. */
+.press {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.4),
+    box-shadow 0.25s;
+}
+.press:hover {
+  transform: perspective(600px) translateY(-3px) rotateX(6deg);
+  box-shadow: 0 14px 30px -12px color-mix(in srgb, var(--fg) 55%, transparent);
+}
+.press:active {
+  transform: perspective(600px) translateY(2px) scale(0.96) rotateX(-4deg);
+  box-shadow: none;
+}
+.press::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle, color-mix(in srgb, #fff 55%, transparent) 10%, transparent 60%);
+  opacity: 0;
+  transform: scale(2.2);
+  transition:
+    opacity 0.7s,
+    transform 0.7s;
+  pointer-events: none;
+}
+.press:active::after {
+  opacity: 1;
+  transform: scale(0);
+  transition: 0s;
+}
+
+.card3d {
+  transition:
+    transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.5s,
+    border-color 0.3s;
+}
+.card3d:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(-6deg) translateY(-10px);
+  box-shadow: 24px 34px 60px -30px color-mix(in srgb, var(--fg) 60%, transparent);
+  border-color: var(--accent);
+}
+.card3d:active {
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(0.98);
 }
 
 .prose-legal h2 {
@@ -141,6 +219,30 @@ details > summary::-webkit-details-marker {
 
 /* ---------- Motion. Everything below is decoration: the site reads fully without it. ---------- */
 @media (prefers-reduced-motion: no-preference) {
+  /* Every page change: the new page swings up into place. */
+  .page-enter {
+    transform-origin: 50% 0;
+    animation: page-enter 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: perspective(1400px) translateY(3rem) rotateX(-9deg);
+    }
+  }
+
+  /* Opening an answer in the questions list. */
+  details[open] > :not(summary) {
+    transform-origin: 50% 0;
+    animation: unfold 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  @keyframes unfold {
+    from {
+      opacity: 0;
+      transform: perspective(800px) rotateX(-50deg);
+    }
+  }
+
   /* Incense smoke: each strand draws itself upward, fades out, and sways. */
   .smoke path {
     stroke-dasharray: 1;
@@ -214,18 +316,94 @@ details > summary::-webkit-details-marker {
     }
   }
 
-  /* Scroll reveal, where the browser supports scroll-driven animation. */
+  /* Scroll-driven motion, where the browser supports it. Each effect follows the scrollbar exactly. */
   @supports (animation-timeline: view()) {
+    .progress {
+      animation: progress linear both;
+      animation-timeline: scroll(root);
+    }
+    @keyframes progress {
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    /* Blocks tip up out of the page as they arrive. */
+    .reveal {
+      transform-origin: 50% 100%;
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
     @keyframes reveal {
       from {
         opacity: 0;
-        transform: translateY(2.5rem);
+        transform: perspective(1200px) translateY(4rem) rotateX(28deg) scale(0.94);
       }
     }
-    .reveal {
-      animation: reveal linear both;
+
+    /* Illustration panels turn in 3D for as long as they are on screen. */
+    .tilt-in {
+      animation: tilt linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 55%;
+      animation-range: cover;
+    }
+    @keyframes tilt {
+      from {
+        transform: perspective(1100px) rotateY(-24deg) rotateX(12deg) scale(0.9);
+      }
+      50% {
+        transform: perspective(1100px) rotateY(0deg) rotateX(0deg) scale(1);
+      }
+      to {
+        transform: perspective(1100px) rotateY(24deg) rotateX(-12deg) scale(0.9);
+      }
+    }
+
+    /* Background art drifts at a different speed from the text in front of it. */
+    .parallax {
+      animation: parallax linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+    @keyframes parallax {
+      from {
+        translate: 0 9rem;
+      }
+      to {
+        translate: 0 -9rem;
+      }
+    }
+
+    /* Ornaments rotate with the page. */
+    .scroll-turn {
+      animation: scroll-turn linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+    @keyframes scroll-turn {
+      from {
+        rotate: -90deg;
+        scale: 0.8;
+      }
+      to {
+        rotate: 90deg;
+        scale: 1.15;
+      }
+    }
+
+    /* The hero headline falls back into the page as you scroll away from it. */
+    .recede {
+      transform-origin: 50% 100%;
+      animation: recede linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+    @keyframes recede {
+      to {
+        opacity: 0;
+        transform: perspective(1000px) translateY(-5rem) rotateX(-22deg) scale(0.9);
+      }
     }
   }
 }
@@ -236,6 +414,9 @@ details > summary::-webkit-details-marker {
   }
   .smoke path {
     opacity: 0.7;
+  }
+  .progress {
+    display: none;
   }
   * {
     transition: none !important;

@@ -6,13 +6,14 @@ export const Registration = z.object({
   label: text, // e.g. "Importer Exporter Code (IEC)"
   number: text,
   verifyUrl: z.url(), // official government portal where a buyer can check the number
+  how: text.optional(), // one sentence: how to look the number up on that portal
 });
 
 export const Company = z.object({
   name: text,
   url: z.url(),
   legalForm: text,
-  proprietor: text,
+  signatory: text, // the person named as signatory on the IEC certificate
   region: text,
   address: text.optional(), // registered address, exactly as on the GST certificate
   email: z.email(),

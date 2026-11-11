@@ -45,10 +45,10 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden">
+      <section data-tone="dark" className="relative overflow-hidden bg-bg text-fg">
         <div className="glow absolute -right-40 top-1/4 size-[52rem]" aria-hidden="true" />
-        <Smoke className="pointer-events-none absolute -right-10 bottom-0 h-[92%] w-auto opacity-60 md:right-[6%] md:opacity-100" />
-        <div className="relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-7xl flex-col justify-center px-6 py-24 md:px-10">
+        <Smoke className="parallax pointer-events-none absolute -right-10 bottom-0 h-[92%] w-auto opacity-60 md:right-[6%] md:opacity-100" />
+        <div className="recede relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-7xl flex-col justify-center px-6 py-24 md:px-10">
           <p className="eyebrow">Import · Export · {company.region}</p>
           <h1 className="display mt-8 max-w-4xl text-[clamp(3.75rem,11vw,10rem)]">
             From one shop counter to <span className="gilt">the world.</span>
@@ -83,7 +83,7 @@ export default function Home() {
       </div>
 
       {/* Facts */}
-      <section data-tone="light" className="bg-bg text-fg">
+      <section data-tone="sand" className="bg-bg text-fg">
         <dl className="mx-auto grid max-w-7xl sm:grid-cols-2 lg:grid-cols-4">
           {facts.map(([big, small, line]) => (
             <div key={big} className="reveal border-b border-line px-6 py-14 md:px-10 lg:border-b-0 lg:border-r lg:last:border-r-0">
@@ -99,7 +99,7 @@ export default function Home() {
       {/* Product */}
       <Section eyebrow="What we make" title={<>Incense sticks, <span className="gilt">made by us.</span></>}>
         <div className="mt-16 grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
-          <div className="reveal relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-surface">
+          <div data-tone="dark" className="tilt-in relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-surface text-fg shadow-2xl">
             <div className="glow absolute inset-0 m-auto size-4/5" aria-hidden="true" />
             <IncenseBundle className="absolute inset-0 size-full p-10" />
             <p className="absolute left-6 top-6 rounded-full border border-line bg-bg/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
@@ -133,7 +133,7 @@ export default function Home() {
       </Section>
 
       {/* Why us */}
-      <Section tone="light" eyebrow="Why buyers choose us" title={<>Four reasons, <span className="gilt">no slogans.</span></>}>
+      <Section tone="sand" eyebrow="Why buyers choose us" title={<>Four reasons, <span className="gilt">no slogans.</span></>}>
         <ol className="mt-16 grid gap-x-16 md:grid-cols-2">
           {reasons.map(([name, line], i) => (
             <li key={name} className="reveal flex gap-8 border-t border-line py-10">
@@ -150,8 +150,8 @@ export default function Home() {
       </Section>
 
       {/* Heritage */}
-      <section className="relative overflow-hidden border-t border-line">
-        <Routes className="pointer-events-none absolute -bottom-6 right-0 w-[min(60rem,90%)] text-accent opacity-50" />
+      <section data-tone="dark" className="relative overflow-hidden bg-bg text-fg">
+        <Routes className="parallax pointer-events-none absolute -bottom-6 right-0 w-[min(60rem,90%)] text-accent opacity-50" />
         <div className="relative mx-auto max-w-7xl px-6 py-28 md:px-10 md:py-44">
           <p className="eyebrow reveal">Our story</p>
           <p className="display reveal mt-8 max-w-5xl text-[clamp(3rem,8vw,7.5rem)]">
@@ -170,12 +170,12 @@ export default function Home() {
       </section>
 
       {company.registrations.length > 0 && (
-        <Section tone="light" eyebrow="Compliance" title={<>Check us <span className="gilt">yourself.</span></>}>
+        <Section tone="sand" eyebrow="Compliance" title={<>Check us <span className="gilt">yourself.</span></>}>
           <dl className="mt-12 grid gap-8 md:grid-cols-3">
             {company.registrations.map((r) => (
-              <div key={r.label} className="rounded-3xl border border-line bg-surface p-8">
+              <div key={r.label} className="card3d reveal rounded-3xl border border-line bg-surface p-8">
                 <dt className="text-sm text-muted">{r.label}</dt>
-                <dd className="display mt-3 text-3xl">{r.number}</dd>
+                <dd className="mt-3 text-2xl font-bold tracking-wider">{r.number}</dd>
               </div>
             ))}
           </dl>
@@ -206,7 +206,7 @@ export default function Home() {
       </Section>
 
       {/* FAQ */}
-      <Section eyebrow="Questions buyers ask" title={<>Straight <span className="gilt">answers.</span></>}>
+      <Section tone="sand" eyebrow="Questions buyers ask" title={<>Straight <span className="gilt">answers.</span></>}>
         <div className="mt-14 max-w-4xl border-t border-line">
           {faqs.map(([q, a]) => (
             <details key={q} className="group border-b border-line">
@@ -223,9 +223,9 @@ export default function Home() {
       </Section>
 
       {/* Call to action */}
-      <section className="relative overflow-hidden border-t border-line">
+      <section data-tone="dark" className="relative overflow-hidden bg-bg text-fg">
         <div className="glow absolute inset-0 m-auto size-[60rem]" aria-hidden="true" />
-        <Mandala className="pointer-events-none absolute inset-0 m-auto size-[62rem] max-w-none text-accent opacity-25" />
+        <Mandala className="scroll-turn pointer-events-none absolute inset-0 m-auto size-[62rem] max-w-none text-accent opacity-25" />
         <div className="relative mx-auto max-w-4xl px-6 py-32 text-center md:py-52">
           <h2 className="display reveal text-[clamp(3rem,9vw,8rem)]">
             Tell us what your <span className="gilt">market needs.</span>
