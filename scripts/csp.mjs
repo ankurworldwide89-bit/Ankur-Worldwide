@@ -16,37 +16,33 @@ const OUT = "csp-hashes.json";
 const FALLBACK = "/:path*"; // 404 and error pages, served for any unknown address
 const INLINE = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/g;
 
-// Where the built pages are. A local build keeps them in .next/server/app; Vercel's build moves them.
-// If neither known folder has them, search for any folder that holds the home and about pages.
-const html = () => globSync("**/*.html", { exclude: (name) => name === "node_modules" || name === ".git" });
-const APP =
-  [".next/server/app", ".vercel/output/static"].find((dir) => existsSync(`${dir}/index.html`)) ??
-  html()
-    .map((f) => f.replaceAll("\\", "/"))
-    .filter((f) => f.endsWith("/index.html") && existsSync(f.replace(/index\.html$/, "about.html")))
-    .map((f) => f.replace(/\/index\.html$/, ""))[0];
-if (!APP) {
-  console.error("Built pages not found. HTML files present:\n" + (html().slice(0, 60).join("\n") || "(none)"));
-  for (const dir of [".next/server/app", ".next/server/route-cache", ".next/output", ".next/adapter"]) {
-    const files = globSync("**/*", { cwd: dir }).map((f) => f.replaceAll("\\", "/"));
-    console.error(`${dir} (${files.length} entries):\n` + files.filter((f) => !/chunks|\.map$/.test(f)).slice(0, 45).join("\n"));
-  }
-  process.exit(1);
-}
-console.log(`Reading built pages from ${APP}`);
+// Built pages as [file, page name]. A local build keeps them in .next/server/app/<name>.html.
+// Vercel's build keeps them in .next/server/route-cache/APP_PAGE/<id>/$/<name>.html, and its
+// 404 and 500 pages in .next/output/static.
+const list = (cwd, pattern = "**/*.html") =>
+  globSync(pattern, { cwd }).map((f) => [`${cwd}/${f}`.replaceAll("\\", "/"), f.replaceAll("\\", "/")]);
+const pages = [
+  ...list(".next/server/app"),
+  ...list(".next/server/route-cache/APP_PAGE").map(([file, f]) => [file, f.replace(/^[^/]+\/\$\//, "")]),
+  ...list(".next/output/static", "*.html"),
+];
 
 const routes = {};
-for (const file of globSync("**/*.html", { cwd: APP })) {
-  const name = file.replaceAll("\\", "/").replace(/\.html$/, "");
+for (const [file, f] of pages) {
+  const name = f.replace(/\.html$/, "");
   const route = /^(_|404$|500$)/.test(name) ? FALLBACK : name === "index" ? "/" : `/${name}`;
   const hashes = new Set(routes[route]);
-  for (const [, attrs, body] of readFileSync(`${APP}/${file}`, "utf8").matchAll(INLINE)) {
+  for (const [, attrs, body] of readFileSync(file, "utf8").matchAll(INLINE)) {
     if (/type="application\/(ld\+)?json"/.test(attrs)) continue; // data, not code: CSP does not apply
     hashes.add(`'sha256-${createHash("sha256").update(body).digest("base64")}'`);
   }
   routes[route] = [...hashes].sort();
 }
-if (!routes["/"]) throw new Error(`No built pages found in ${APP}. Run "next build" first.`);
+if (!routes["/"]) {
+  console.error(`Home page not found among ${pages.length} built pages. Run "next build" first.`);
+  console.error(pages.map(([file]) => file).slice(0, 40).join("\n"));
+  process.exit(1);
+}
 
 const json = JSON.stringify(routes, null, 2) + "\n";
 if (process.argv.includes("--check")) {
