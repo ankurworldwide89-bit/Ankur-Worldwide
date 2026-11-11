@@ -27,7 +27,10 @@ const APP =
     .map((f) => f.replace(/\/index\.html$/, ""))[0];
 if (!APP) {
   console.error("Built pages not found. HTML files present:\n" + (html().slice(0, 60).join("\n") || "(none)"));
-  console.error("Top-level build folders:\n" + globSync("{.next,.vercel,.next/server,.vercel/output}/*").slice(0, 80).join("\n"));
+  for (const dir of [".next/server/app", ".next/server/route-cache", ".next/output", ".next/adapter"]) {
+    const files = globSync("**/*", { cwd: dir }).map((f) => f.replaceAll("\\", "/"));
+    console.error(`${dir} (${files.length} entries):\n` + files.filter((f) => !/chunks|\.map$/.test(f)).slice(0, 45).join("\n"));
+  }
   process.exit(1);
 }
 console.log(`Reading built pages from ${APP}`);
