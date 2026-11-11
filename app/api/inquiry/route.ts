@@ -3,6 +3,7 @@ import { Inquiry } from "@/lib/inquiry";
 
 // The only server code on the site. Order: size and origin checks, validation, honeypot,
 // Turnstile, rate limit + insert (one database call), then email. Errors sent to the visitor are generic.
+// The inquiry is accepted if it is saved OR emailed, so a sleeping database never loses one.
 
 const MAX_CHARS = 10_000;
 
@@ -53,16 +54,26 @@ export async function POST(req: Request) {
     const ipHash = createHmac("sha256", env("IP_HASH_SALT"))
       .update(ip ?? "unknown")
       .digest("hex");
-    const key = env("SUPABASE_SERVICE_ROLE_KEY");
-    const saved = await fetch(`${env("SUPABASE_URL")}/rest/v1/rpc/submit_inquiry`, {
-      method: "POST",
-      headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ p: inquiry, p_ip_hash: ipHash }),
-    });
-    if (!saved.ok) throw new Error(`Supabase responded ${saved.status}`);
-    if ((await saved.json()) !== true) return reply(429); // rate limit reached, nothing stored
+    // Save and email are independent: the inquiry survives if either one works.
+    // (Supabase's free plan pauses an idle database; the owner must still get the email.)
+    let saved = false;
+    try {
+      const key = env("SUPABASE_SERVICE_ROLE_KEY");
+      const db = await fetch(`${env("SUPABASE_URL")}/rest/v1/rpc/submit_inquiry`, {
+        method: "POST",
+        headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ p: inquiry, p_ip_hash: ipHash }),
+      });
+      if (!db.ok) throw new Error(`Supabase responded ${db.status}`);
+      if ((await db.json()) !== true) return reply(429); // rate limit reached, nothing stored or sent
+      saved = true;
+    } catch (err) {
+      // shortcut: with the database down there is no per-IP limit (Turnstile and the Cloudflare rule
+      // still apply), upgrade to a second rate-limit store if this window is ever abused.
+      console.error("Inquiry NOT saved to database:", err instanceof Error ? err.message : err);
+    }
 
-    // The inquiry is already saved, so an email failure must not lose it or fail the request.
+    let emailed = false;
     try {
       const mail = await fetch("https://api.resend.com/emails", {
         method: "POST",
@@ -74,6 +85,7 @@ export async function POST(req: Request) {
           subject: `Inquiry: ${inquiry.product} — ${inquiry.company} (${inquiry.country})`,
           // Plain text only: nothing the visitor typed is ever interpreted as HTML.
           text: [
+            ...(saved ? [] : ["WARNING: this inquiry was NOT saved to the database. This email is the only copy.", "Check that the Supabase project is not paused.", ""]),
             `Name: ${inquiry.name}`,
             `Company: ${inquiry.company}`,
             `Email: ${inquiry.email}`,
@@ -87,11 +99,14 @@ export async function POST(req: Request) {
           ].join("\n"),
         }),
       });
-      if (!mail.ok) console.error(`Inquiry saved but email failed: Resend responded ${mail.status}`);
+      if (!mail.ok) throw new Error(`Resend responded ${mail.status}`);
+      emailed = true;
     } catch (err) {
-      console.error("Inquiry saved but email failed:", err instanceof Error ? err.message : err);
+      console.error("Inquiry email NOT sent:", err instanceof Error ? err.message : err);
     }
 
+    // Only tell the visitor it failed if the inquiry reached neither place.
+    if (!saved && !emailed) return reply(500);
     return reply(200, true);
   } catch (err) {
     console.error("Inquiry endpoint error:", err instanceof Error ? err.message : err);

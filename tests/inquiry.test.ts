@@ -30,12 +30,12 @@ describe("inquiry validation", () => {
 
 describe("POST /api/inquiry", () => {
   // Fake the three outside services. `rpc` is what the database function returns: false = rate limited.
-  const outside = (o: { turnstile?: boolean; rpc?: boolean; dbStatus?: number } = {}) =>
+  const outside = (o: { turnstile?: boolean; rpc?: boolean; dbStatus?: number; mailStatus?: number } = {}) =>
     vi.fn(async (url: string | URL | Request, _init?: RequestInit) => {
       const u = String(url);
       if (u.includes("turnstile")) return Response.json({ success: o.turnstile ?? true });
       if (u.includes("/rpc/submit_inquiry")) return Response.json(o.rpc ?? true, { status: o.dbStatus ?? 200 });
-      if (u.includes("resend")) return Response.json({ id: "1" });
+      if (u.includes("resend")) return Response.json({ id: "1" }, { status: o.mailStatus ?? 200 });
       throw new Error(`Unexpected request to ${u}`);
     });
 
@@ -105,8 +105,20 @@ describe("POST /api/inquiry", () => {
     expect(f).not.toHaveBeenCalled();
   });
 
-  it("returns only a generic error when the database fails", async () => {
-    vi.stubGlobal("fetch", outside({ dbStatus: 500 }));
+  it("still emails the inquiry, with a warning, when the database is down", async () => {
+    const f = outside({ dbStatus: 500 });
+    vi.stubGlobal("fetch", f);
+    expect((await post(valid)).status).toBe(200);
+    expect(String(calls(f, "resend")[0]![1]!.body)).toContain("NOT saved to the database");
+  });
+
+  it("still succeeds when the inquiry is saved but the email fails", async () => {
+    vi.stubGlobal("fetch", outside({ mailStatus: 500 }));
+    expect((await post(valid)).status).toBe(200);
+  });
+
+  it("returns only a generic error when both the database and the email fail", async () => {
+    vi.stubGlobal("fetch", outside({ dbStatus: 500, mailStatus: 500 }));
     const res = await post(valid);
     expect(res.status).toBe(500);
     expect(await res.json()).toEqual({ ok: false });

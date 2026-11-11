@@ -85,6 +85,9 @@ All of these need the live deployment or accounts only the owner can open. DEPLO
 - **Rate limit can be weakened by calling the `*.vercel.app` address directly.** There, the
   `cf-connecting-ip` header can be forged, giving an attacker a fresh identity per request. Turnstile still
   applies to every request. To close this fully, restrict the Vercel deployment to Cloudflare traffic.
+- **A paused database removes the per-address rate limit.** Supabase's free plan pauses an idle project.
+  The endpoint then skips saving and still emails the inquiry, marked "NOT saved to the database". While that
+  lasts, only Turnstile and the Cloudflare rule limit abuse. Un-pause the project when such an email arrives.
 - **The rate-limit count is not atomic.** Several simultaneous requests can slightly exceed 5 per hour.
 - **`style-src 'self'` is strict.** When the first real photo is added, the image component's inline style
   may be blocked and logged. It is cosmetic. If it appears, add `style-src-attr 'unsafe-inline'` to the CSP
@@ -105,7 +108,7 @@ All of these need the live deployment or accounts only the owner can open. DEPLO
 | A07 Authentication failures | Not applicable on the site | There is no login. Owner account security is in SECURITY-CHECKLIST.md |
 | A08 Software or data integrity failures | Mostly addressed | Deploys only from the protected `main` branch. Turnstile's script cannot use Subresource Integrity because Cloudflare changes it without notice |
 | A09 Logging and alerting failures | Partly addressed | Errors are logged in Vercel without personal data. No alerting is set up; the owner must look at Vercel logs and Cloudflare events |
-| A10 Mishandling of exceptional conditions | Addressed | Every failure path returns a generic reply; an email failure never loses a saved inquiry; missing configuration fails closed |
+| A10 Mishandling of exceptional conditions | Addressed | Every failure path returns a generic reply; saving and emailing are independent, so one failing never loses an inquiry; missing configuration fails closed |
 
 ## Self-audit: OWASP ASVS Level 2 (v4.0.3 chapters)
 
