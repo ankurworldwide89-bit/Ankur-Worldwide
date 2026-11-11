@@ -12,15 +12,30 @@
 import { createHash } from "node:crypto";
 import { existsSync, globSync, readFileSync, writeFileSync } from "node:fs";
 
-const APP = ".next/server/app";
 const OUT = "csp-hashes.json";
 const FALLBACK = "/:path*"; // 404 and error pages, served for any unknown address
 const INLINE = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/g;
 
+// Where the built pages are. A local build keeps them in .next/server/app; Vercel's build moves them.
+// If neither known folder has them, search for any folder that holds the home and about pages.
+const html = () => globSync("**/*.html", { exclude: (name) => name === "node_modules" || name === ".git" });
+const APP =
+  [".next/server/app", ".vercel/output/static"].find((dir) => existsSync(`${dir}/index.html`)) ??
+  html()
+    .map((f) => f.replaceAll("\\", "/"))
+    .filter((f) => f.endsWith("/index.html") && existsSync(f.replace(/index\.html$/, "about.html")))
+    .map((f) => f.replace(/\/index\.html$/, ""))[0];
+if (!APP) {
+  console.error("Built pages not found. HTML files present:\n" + (html().slice(0, 60).join("\n") || "(none)"));
+  console.error("Top-level build folders:\n" + globSync("{.next,.vercel,.next/server,.vercel/output}/*").slice(0, 80).join("\n"));
+  process.exit(1);
+}
+console.log(`Reading built pages from ${APP}`);
+
 const routes = {};
 for (const file of globSync("**/*.html", { cwd: APP })) {
   const name = file.replaceAll("\\", "/").replace(/\.html$/, "");
-  const route = name.startsWith("_") ? FALLBACK : name === "index" ? "/" : `/${name}`;
+  const route = /^(_|404$|500$)/.test(name) ? FALLBACK : name === "index" ? "/" : `/${name}`;
   const hashes = new Set(routes[route]);
   for (const [, attrs, body] of readFileSync(`${APP}/${file}`, "utf8").matchAll(INLINE)) {
     if (/type="application\/(ld\+)?json"/.test(attrs)) continue; // data, not code: CSP does not apply
