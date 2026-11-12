@@ -6,7 +6,7 @@ import { products } from "@/content/products";
 
 export const metadata: Metadata = {
   title: "Products",
-  description: "Products manufactured and exported from India by Ankur Worldwide.",
+  description: "Incense sticks and dhoop made in Gujarat, India, and exported by Ankur Worldwide.",
   alternates: { canonical: "/products" },
 };
 
@@ -15,7 +15,7 @@ export default function Products() {
     <>
       <PageHeader
         eyebrow="Products"
-        title={<>What we make <span className="gilt">and export.</span></>}
+        title={<>What we <span className="gilt">export.</span></>}
         intro="We list a product only when we are ready to supply it. The catalogue will grow."
       />
       <div className="mx-auto grid max-w-7xl gap-8 px-6 py-24 md:grid-cols-2 md:px-10 md:py-32">

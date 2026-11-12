@@ -1,4 +1,5 @@
 import { IncenseBundle, Mandala, Routes, Smoke } from "@/components/art";
+import { StickAnatomy } from "@/components/StickAnatomy";
 import { Button, Section } from "@/components/ui";
 import { company } from "@/content/company";
 import { products } from "@/content/products";
@@ -7,12 +8,12 @@ import { products } from "@/content/products";
 const facts = [
   ["50+", "years", "The family behind the name has traded in Gujarat for more than fifty years."],
   ["4th", "generation", "Ankur Worldwide is the family's fourth generation, taking the name abroad."],
-  ["Made", "in-house", "We manufacture the incense sticks we export. No trading house in between."],
+  ["Made", "in Gujarat", "Our incense is made for us by a manufacturing partner in Bagasara, the family's home town."],
   ["World", "wide", "We take inquiries from every country and ship to your destination port."],
 ] as const;
 
 const reasons = [
-  ["Straight from the maker", "We manufacture the incense sticks we export. You deal with the people who make the product."],
+  ["Close to the source", "Our incense is made for us in Bagasara, the family's own town, not bought through a chain of traders."],
   ["Built for your market", "Fragrance, stick size and packaging are quoted to your specification, not picked from a fixed list."],
   ["Everything in writing", "Price, specification and delivery terms are confirmed in a written quotation before production starts."],
   ["A name with a history", "Behind the company stands a family that has kept one shop trading for more than fifty years."],
@@ -22,12 +23,12 @@ const order = [
   ["Inquiry", "Tell us the product, the quantity and the destination country."],
   ["Sample", "We send samples so you can check quality before you commit."],
   ["Quote", "You receive a written price, specification and delivery terms."],
-  ["Production", "We manufacture and pack your order to the agreed specification."],
+  ["Production", "Your order is made and packed to the agreed specification."],
   ["Shipment", "We dispatch with the export documents your customs need."],
 ] as const;
 
 const faqs = [
-  ["What do you export?", "Incense sticks (agarbatti) that we manufacture ourselves in India. More products will be listed as each one is ready to supply."],
+  ["What do you export?", "Incense sticks (agarbatti) and dhoop, made for us by a manufacturing partner in Bagasara, Gujarat. More products will be listed as each one is ready to supply."],
   ["Can you match my fragrance, size and packaging?", "Yes, tell us what your market needs. We quote fragrances, stick sizes and packaging to each buyer's specification."],
   ["Can I see samples first?", "Yes. Samples come before the quotation is final, so you can judge the quality before you commit to an order."],
   ["What is the minimum order?", "It depends on the product and the packaging you choose. We confirm it in writing with your quotation."],
@@ -36,7 +37,7 @@ const faqs = [
   ["How can I verify the company?", "See our Compliance page, or tick \"send me your registration documents\" on the inquiry form. We share copies by email with verified buyers."],
 ] as const;
 
-const ticker = ["Incense sticks", "Manufacturer", "Exporter", "Gujarat, India", "Four generations", "Made to your specification", "Shipping worldwide"];
+const ticker = ["Incense sticks", "Dhoop", "Exporter", "Gujarat, India", "Four generations", "Made to your specification", "Shipping worldwide"];
 
 export const metadata = { alternates: { canonical: "/" } };
 
@@ -55,7 +56,7 @@ export default function Home() {
           </h1>
           <p className="mt-10 max-w-xl text-lg leading-relaxed text-muted md:text-xl">
             A Gujarat family that has traded for more than fifty years. Ankur Worldwide is its fourth generation,
-            manufacturing and exporting incense sticks to buyers everywhere.
+            exporting incense sticks made in Gujarat to buyers everywhere.
           </p>
           <div className="mt-12 flex flex-wrap items-center gap-4">
             <Button href="/contact">Send an inquiry</Button>
@@ -97,13 +98,13 @@ export default function Home() {
       </section>
 
       {/* Product */}
-      <Section eyebrow="What we make" title={<>Incense sticks, <span className="gilt">made by us.</span></>}>
+      <Section eyebrow="What we export" title={<>Incense sticks, <span className="gilt">made in Gujarat.</span></>}>
         <div className="mt-16 grid items-center gap-12 lg:grid-cols-2 lg:gap-24">
           <div data-tone="dark" className="tilt-in relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-surface text-fg shadow-2xl">
             <div className="glow absolute inset-0 m-auto size-4/5" aria-hidden="true" />
             <IncenseBundle className="absolute inset-0 size-full p-10" />
             <p className="absolute left-6 top-6 rounded-full border border-line bg-bg/70 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-              Manufacturer and exporter
+              Exporter
             </p>
           </div>
           <div className="reveal">
@@ -112,7 +113,7 @@ export default function Home() {
             </h3>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted">{product.description[0]}</p>
             <ul className="mt-10 border-t border-line">
-              {["Fragrance, stick size and packaging to your specification", "Packed for export and for your market's shelves", "Supplied direct by the manufacturer"].map((point) => (
+              {["Fragrance, stick size and packaging to your specification", "Packed for export and for your market's shelves", "More than thirty fragrances, from 15 g packs to 400 g"].map((point) => (
                 <li key={point} className="flex items-baseline gap-4 border-b border-line py-5">
                   <span aria-hidden="true" className="text-accent">
                     ◆
@@ -129,6 +130,13 @@ export default function Home() {
             </div>
             <p className="mt-8 text-sm text-muted">Import categories will be announced.</p>
           </div>
+        </div>
+      </Section>
+
+      {/* Anatomy */}
+      <Section tone="dark" eyebrow="Inside an incense stick" title={<>Open it up. <span className="gilt">See how it works.</span></>}>
+        <div className="mt-10">
+          <StickAnatomy />
         </div>
       </Section>
 

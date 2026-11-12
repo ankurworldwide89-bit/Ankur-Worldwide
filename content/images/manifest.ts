@@ -6,6 +6,6 @@ type Slot = { alt: string; ratio: "4/5" | "3/2"; src?: StaticImageData };
 //   import incense from "./incense-sticks.jpg";
 // and add `src: incense` to the slot below.
 export const images: Record<string, Slot> = {
-  "incense-sticks": { alt: "Incense sticks made by Ankur Worldwide", ratio: "4/5" },
+  "incense-sticks": { alt: "Incense sticks exported by Ankur Worldwide", ratio: "4/5" },
   store: { alt: "Ankur Novelty Store in Bagasara, Gujarat", ratio: "3/2" },
 };

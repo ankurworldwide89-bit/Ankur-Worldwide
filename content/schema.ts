@@ -30,7 +30,10 @@ export const Product = z.object({
   localName: text.optional(),
   summary: text.max(160),
   description: z.array(text).min(1),
-  manufacturedInHouse: z.boolean(), // true only when the owner confirms we make it ourselves
+  manufacturedInHouse: z.boolean(), // true only when Ankur Worldwide itself is the manufacturer
+  madeBy: text.optional(), // who makes it, when that is not Ankur Worldwide itself
+  showAnatomy: z.boolean().optional(), // show the clickable 3D incense stick on the product page
+  range: z.array(z.object({ name: text, pack: text, items: z.array(text).min(1) })).default([]), // collections: pack format and fragrances
   origin: text,
   specs: z.array(z.tuple([text, text])).default([]),
   packaging: z.array(text).default([]),

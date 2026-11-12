@@ -65,3 +65,20 @@ real value in `content/products/incense-sticks.ts`:
 
 - A mailbox on the domain (for example `info@ankurworldwide.com`). See DEPLOY.md, step 9.
 - The final AW monogram, as an SVG file.
+
+## Catalogue range (added from the manufacturing partner's catalogue)
+
+The owner confirmed that SWARA Agarbati Works manufactures for Ankur Worldwide. The site therefore says
+"made for Ankur Worldwide by our manufacturing partner in Bagasara, Gujarat" and "Exporter". It does **not**
+say "manufactured by Ankur Worldwide", because that would be untrue and a buyer or customs officer can check it.
+
+Please confirm or supply:
+
+- **Written permission from SWARA Agarbati Works** to list their fragrance names (Evoke, Asiatic, Velar,
+  Netram, The Monk and the others) on this site. Until then the partner is not named and no pack artwork is shown.
+- **Which brand is printed on export packs**: SWARA, Ankur Worldwide, or the buyer's own (private label).
+- Two packs named "Ponds" were left off the site. "Pond's" is another company's registered trademark.
+- Retail prices (M.R.P.) were left off on purpose. Export prices are quoted per inquiry.
+- HS code 3307.41.00 and "minimum order confirmed with your quotation" are still unconfirmed placeholders.
+- The four-part description of an incense stick (bamboo core, base paste, fragrance layer, ember) is a
+  general description of a bamboo-core agarbatti. Correct it if your partner's sticks are made differently.

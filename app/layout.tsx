@@ -11,9 +11,9 @@ const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(company.url),
-  title: { default: "Ankur Worldwide — Manufacturer and Exporter, India", template: "%s — Ankur Worldwide" },
+  title: { default: "Ankur Worldwide — Incense Sticks Exporter, India", template: "%s — Ankur Worldwide" },
   description:
-    "Ankur Worldwide is the fourth generation of a Gujarat trading family, manufacturing and exporting incense sticks from India to buyers worldwide.",
+    "Ankur Worldwide is the fourth generation of a Gujarat trading family, exporting incense sticks made in Gujarat, India, to buyers worldwide.",
   openGraph: { siteName: company.name, type: "website", locale: "en" },
 };
 

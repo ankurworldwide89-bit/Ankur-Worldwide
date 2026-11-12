@@ -20,6 +20,6 @@ export const chapters = [
   {
     numeral: "IV",
     title: "The world",
-    body: `${company.name} is the family's fourth generation, led by ${company.signatory}. It is a new venture in import and export, beginning with incense sticks it manufactures in India for buyers abroad.`,
+    body: `${company.name} is the family's fourth generation, led by ${company.signatory}. It is a new venture in import and export, beginning with incense sticks made for it in Bagasara and exported to buyers abroad.`,
   },
 ];

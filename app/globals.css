@@ -422,3 +422,197 @@ details > summary::-webkit-details-marker {
     transition: none !important;
   }
 }
+
+/* ---------- 3D incense stick (components/StickAnatomy.tsx). Real CSS 3D: layers sit at different depths. ---------- */
+.anatomy {
+  --lift: 7rem; /* how far the layers separate when opened */
+}
+.anatomy-stage {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 30rem;
+  perspective: 1100px;
+  cursor: pointer;
+  border-radius: 2rem;
+}
+.stick3d {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(52deg) rotateZ(-16deg);
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.anatomy-stage:hover .stick3d {
+  transform: rotateX(46deg) rotateZ(-12deg) rotateY(6deg);
+}
+.anatomy[data-open="true"] .stick3d {
+  transform: rotateX(18deg) rotateY(-16deg) rotateZ(-4deg);
+}
+.anatomy .layer {
+  position: absolute;
+  top: 50%;
+  border-radius: 999px;
+  transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  box-shadow: 0 18px 30px -14px rgb(0 0 0 / 0.7);
+}
+.anatomy .core {
+  left: 6%;
+  width: 78%;
+  height: 10px;
+  margin-top: -5px;
+  background: linear-gradient(#f6e3b4, #c9a66b 45%, #7d5f33);
+}
+.anatomy .base {
+  left: 26%;
+  width: 58%;
+  height: 26px;
+  margin-top: -13px;
+  background: linear-gradient(#6b5545, #2e221b 50%, #0d0806);
+}
+.anatomy .coat {
+  left: 26%;
+  width: 58%;
+  height: 34px;
+  margin-top: -17px;
+  background: linear-gradient(#c48e4f, #7a5229 50%, #38240f);
+}
+.anatomy[data-open="true"] .coat {
+  transform: translate3d(0, calc(var(--lift) * -1), 80px);
+}
+.anatomy[data-open="true"] .core {
+  transform: translate3d(0, var(--lift), -80px);
+}
+/* Numbered tags on each part: hidden until the stick is opened. */
+.anatomy .layer > i,
+.anatomy .ember > i {
+  position: absolute;
+  left: -2.4rem;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-top: -0.95rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--accent);
+  font: 700 0.8rem var(--font-body);
+  opacity: 0;
+  transition: opacity 0.5s 0.5s;
+}
+.anatomy .ember {
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  border-radius: 999px;
+  background: radial-gradient(circle, #fff3c4 0 18%, #ffb347 40%, #e0672f 62%, transparent 72%);
+  box-shadow: 0 0 34px 10px rgb(224 103 47 / 0.55);
+}
+.anatomy .ember > i {
+  left: auto;
+  right: -2.6rem;
+}
+.anatomy[data-open="true"] .layer > i,
+.anatomy[data-open="true"] .ember > i {
+  opacity: 1;
+}
+/* The cut end: bamboo in the middle, paste around it, fragrance on the outside. */
+.anatomy .xsection {
+  position: absolute;
+  left: 3%;
+  top: 10%;
+  width: 8.5rem;
+  height: 8.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: radial-gradient(circle, #e8cf96 0 15%, #2e221b 16% 60%, #a9773f 61% 100%);
+  box-shadow: 0 0 60px -10px rgb(224 103 47 / 0.6);
+  opacity: 0;
+  transform: translateZ(0) scale(0.3) rotateY(60deg);
+  transition:
+    transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.8s;
+}
+.anatomy[data-open="true"] .xsection {
+  opacity: 1;
+  transform: translateZ(40px) scale(1) rotateY(0deg);
+}
+.anatomy .xsection em {
+  position: absolute;
+  inset: auto 0 -2rem 0;
+  text-align: center;
+  font: 700 0.7rem var(--font-body);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.anatomy-hint {
+  position: absolute;
+  inset: auto 0 1rem 0;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.anatomy-parts {
+  display: grid;
+  gap: 0 4rem;
+  margin-top: 2.5rem;
+}
+.anatomy-parts li {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.75rem 0;
+  border-top: 1px solid var(--line);
+  transition: opacity 0.6s;
+}
+.anatomy-parts li > span {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.anatomy[data-open="false"] .anatomy-parts li {
+  opacity: 0.55;
+}
+@media (min-width: 768px) {
+  .anatomy-parts {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .anatomy {
+    --lift: 4.5rem;
+  }
+  .anatomy-stage {
+    height: 19rem;
+  }
+  .anatomy .xsection {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+  .anatomy .layer > i,
+  .anatomy .ember > i {
+    left: -1.9rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: -0.75rem;
+    font-size: 0.7rem;
+  }
+  .anatomy .ember > i {
+    left: auto;
+    right: -1.9rem;
+  }
+}

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IncenseBundle } from "@/components/art";
-import { Button, ImageSlot, JsonLd } from "@/components/ui";
+import { StickAnatomy } from "@/components/StickAnatomy";
+import { Button, ImageSlot, JsonLd, Section } from "@/components/ui";
 import { company } from "@/content/company";
 import { products } from "@/content/products";
 
@@ -33,6 +34,7 @@ export default async function ProductPage(props: Props) {
   const specs: [string, string][] = [
     ["Product", p.localName ? `${p.name} (${p.localName})` : p.name],
     ["Supplied by", `${company.name}, ${role.toLowerCase()}`],
+    ...(p.madeBy ? [["Made by", p.madeBy] as [string, string]] : []),
     ["Origin", p.origin],
     ...p.specs,
     ...(p.packaging.length ? [["Packaging", p.packaging.join(", ")] as [string, string]] : []),
@@ -44,6 +46,7 @@ export default async function ProductPage(props: Props) {
   const url = `${company.url}/products/${p.slug}`;
 
   return (
+    <>
     <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 md:px-10 md:pb-36 md:pt-14">
       <nav aria-label="Breadcrumb" className="text-sm text-muted">
         <Link href="/" className="hover:text-fg">
@@ -91,6 +94,41 @@ export default async function ProductPage(props: Props) {
         </div>
       </div>
 
+    </div>
+
+      {p.range.length > 0 && (
+        <Section tone="sand" eyebrow="The range" title={<>Every pack, <span className="gilt">every fragrance.</span></>}>
+          <ul className="mt-14 grid gap-6 md:grid-cols-2">
+            {p.range.map((c) => (
+              <li key={c.name} className="card3d reveal rounded-[2rem] border border-line bg-surface p-8">
+                <div className="flex flex-wrap items-baseline justify-between gap-3">
+                  <h3 className="display text-3xl md:text-4xl">{c.name}</h3>
+                  <span className="rounded-full border border-accent px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-accent">{c.pack}</span>
+                </div>
+                <ul className="mt-6 flex flex-wrap gap-2">
+                  {c.items.map((item) => (
+                    <li key={item} className="rounded-full bg-bg px-4 py-2 text-sm">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+          <p className="reveal mt-10 max-w-xl leading-relaxed text-muted">
+            Fragrance names are those used by our manufacturing partner. Private-label and custom packs are quoted on request.
+          </p>
+        </Section>
+      )}
+
+      {p.showAnatomy && (
+        <Section tone="dark" eyebrow="Inside an incense stick" title={<>Open it up. <span className="gilt">See how it works.</span></>}>
+          <div className="mt-10">
+            <StickAnatomy />
+          </div>
+        </Section>
+      )}
+
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -115,6 +153,6 @@ export default async function ProductPage(props: Props) {
           ],
         }}
       />
-    </div>
+    </>
   );
 }
