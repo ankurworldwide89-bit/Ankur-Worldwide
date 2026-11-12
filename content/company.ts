@@ -10,8 +10,8 @@ export const company = Company.parse({
   region: "Gujarat, India",
   address: "First Floor, 101, Raj Apartment, City Survey No 2250, Bagasara, Rajkot, Amreli, Gujarat 365440, India",
   email: "ankurworldwide89@gmail.com",
-  phone: "+918866253153",
-  phoneDisplay: "+91 88662 53153",
+  phone: "+917861053153",
+  phoneDisplay: "+91 78610 53153",
   hours: "Open 24 hours, every day, for orders and inquiries",
   registrations: [
     {
