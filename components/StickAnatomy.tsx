@@ -11,11 +11,12 @@ const parts = [
 ] as const;
 
 // One click takes the stick apart in 3D: the three layers separate and a cross-section shows the inside.
+// `compact` is the landing-page version: the stick with part names only, no descriptions.
 // All geometry and motion is in globals.css (".anatomy"), because the site's security policy forbids inline styles.
-export function StickAnatomy() {
+export function StickAnatomy({ compact }: { compact?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="anatomy" data-open={open}>
+    <div className={compact ? "anatomy anatomy-hero" : "anatomy"} data-open={open}>
       <button
         type="button"
         className="anatomy-stage"
@@ -43,17 +44,28 @@ export function StickAnatomy() {
         <span className="anatomy-hint">{open ? "Click to close" : "Click the stick to open it"}</span>
       </button>
 
-      <ol className="anatomy-parts">
-        {parts.map(([name, text], i) => (
-          <li key={name}>
-            <span aria-hidden="true">{i + 1}</span>
-            <div>
-              <h3 className="display text-3xl">{name}</h3>
-              <p className="mt-2 leading-relaxed text-muted">{text}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      {compact ? (
+        <ol className="anatomy-legend">
+          {parts.map(([name], i) => (
+            <li key={name}>
+              <span aria-hidden="true">{i + 1}</span>
+              {name}
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <ol className="anatomy-parts">
+          {parts.map(([name, text], i) => (
+            <li key={name}>
+              <span aria-hidden="true">{i + 1}</span>
+              <div>
+                <h3 className="display text-3xl">{name}</h3>
+                <p className="mt-2 leading-relaxed text-muted">{text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }

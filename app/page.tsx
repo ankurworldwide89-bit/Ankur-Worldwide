@@ -48,22 +48,25 @@ export default function Home() {
       {/* Hero */}
       <section data-tone="dark" className="relative overflow-hidden bg-bg text-fg">
         <div className="glow absolute -right-40 top-1/4 size-[52rem]" aria-hidden="true" />
-        <Smoke className="parallax pointer-events-none absolute -right-10 bottom-0 h-[92%] w-auto opacity-60 md:right-[6%] md:opacity-100" />
-        <div className="recede relative mx-auto flex min-h-[calc(100svh-4rem)] max-w-7xl flex-col justify-center px-6 py-24 md:px-10">
-          <p className="eyebrow">Import · Export · {company.region}</p>
-          <h1 className="display mt-8 max-w-4xl text-[clamp(3.75rem,11vw,10rem)]">
-            From one shop counter to <span className="gilt">the world.</span>
-          </h1>
-          <p className="mt-10 max-w-xl text-lg leading-relaxed text-muted md:text-xl">
-            A Gujarat family that has traded for more than fifty years. Ankur Worldwide is its fourth generation,
-            exporting incense sticks made in Gujarat to buyers everywhere.
-          </p>
-          <div className="mt-12 flex flex-wrap items-center gap-4">
-            <Button href="/contact">Send an inquiry</Button>
-            <Button href="/about" variant="ghost">
-              Our story
-            </Button>
+        <Smoke className="parallax pointer-events-none absolute -right-24 bottom-0 hidden h-[92%] w-auto opacity-25 lg:block" />
+        <div className="recede relative mx-auto grid min-h-[calc(100svh-4rem)] max-w-7xl items-center gap-6 px-6 py-16 md:px-10 lg:grid-cols-2 lg:py-24">
+          <div>
+            <p className="eyebrow">Import · Export · {company.region}</p>
+            <h1 className="display mt-8 text-[clamp(3.25rem,7.2vw,7rem)]">
+              From one shop counter to <span className="gilt">the world.</span>
+            </h1>
+            <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted md:text-xl">
+              A Gujarat family that has traded for more than fifty years. Ankur Worldwide is its fourth generation,
+              exporting incense sticks made in Gujarat to buyers everywhere.
+            </p>
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <Button href="/contact">Send an inquiry</Button>
+              <Button href="/about" variant="ghost">
+                Our story
+              </Button>
+            </div>
           </div>
+          <StickAnatomy compact />
         </div>
       </section>
 
