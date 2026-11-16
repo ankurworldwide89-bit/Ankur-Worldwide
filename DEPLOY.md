@@ -221,3 +221,30 @@ git push -u origin my-change
 
 Open the pull request link GitHub prints, wait for the green checks, and merge. Vercel publishes the change
 within a few minutes.
+
+## Blog
+
+The blog admin lives at `https://ankurworldwide.com/admin`. Do these steps once, in this order.
+
+1. **Create the tables.** Supabase → SQL Editor → paste all of `supabase/blog.sql` → Run.
+2. **Stop strangers signing up.** Supabase → Authentication → Sign In / Providers → turn **off** "Allow new users
+   to sign up". Only accounts you add yourself can then exist.
+3. **Create your admin account.** Supabase → Authentication → Users → Add user → Create new user. Enter your email
+   and a long, unique password from your password manager. Tick "Auto Confirm User".
+4. **Make that account a blog admin.** SQL Editor → run (with your email):
+
+```sql
+insert into public.blog_admins (user_id)
+select id from auth.users where email = 'YOUR-EMAIL' on conflict do nothing;
+```
+
+5. **Let the admin page rebuild the site.** Vercel → project → Settings → Git → Deploy Hooks → name `blog`, branch
+   `main` → Create. Copy the URL. Then Settings → Environment Variables → add `VERCEL_DEPLOY_HOOK_URL` with that
+   URL → Save → Deployments → Redeploy. Treat the URL like a password: anyone with it can trigger rebuilds.
+6. **First sign-in.** Open `/admin`, sign in, and follow the two-factor setup with an authenticator app.
+
+**Writing a post:** New post → write → tick Published → Save → **Update the live site**. The post appears on
+`/blog` about two minutes later. Unpublishing or deleting also needs "Update the live site".
+
+If the database is asleep (free plan pauses after a week without use), a site update fails and the previous version
+stays live. Un-pause the project in Supabase and press "Update the live site" again.

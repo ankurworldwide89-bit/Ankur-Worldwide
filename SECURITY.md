@@ -31,6 +31,22 @@ Visitor → Cloudflare (TLS, WAF, bot rules, rate limit) → Vercel → static p
 - **Supply chain.** Lockfile committed; `npm audit`, CodeQL and gitleaks run in GitHub Actions; Dependabot
   proposes updates weekly.
 
+## Blog admin
+
+The one place with a login. Design choices that keep it small:
+
+- **Accounts:** public sign-up is switched off in Supabase; the owner creates their account by hand.
+- **Two-factor required:** the database refuses writes unless the session has passed TOTP two-factor (aal2) and
+  the user is listed in . This is enforced by Row Level Security, not just by the page.
+- **Session:** kept in sessionStorage, so closing the tab signs out. Supabase rate-limits sign-in attempts.
+- **No server secrets in the browser:** the admin page holds only the public key. Rebuilds go through
+  `/api/publish`, which re-checks the session, two-factor and admin status before calling the deploy hook.
+- **Posts cannot inject code:** post text is rendered by a tiny Markdown subset into React elements; raw HTML is
+  shown as text and only http(s)/mailto/same-site links are kept (tested in `tests/blog.test.ts`).
+- **Blog pages stay static** and are covered by the hash-based CSP. Only `/admin` may connect to Supabase.
+- **Not verified yet:** the full sign-in, two-factor and publish flow against the live project (needs the owner's
+  account); Supabase's own sign-in rate limits.
+
 ## Response headers
 
 Set in `next.config.ts` for every response.

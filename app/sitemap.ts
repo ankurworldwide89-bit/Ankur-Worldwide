@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 import { company } from "@/content/company";
 import { products } from "@/content/products";
+import { getPosts } from "@/lib/posts";
 import { alternates, href, locales } from "@/lib/i18n";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const translated = ["/", "/products", ...products.map((p) => `/products/${p.slug}`), "/about", "/group", "/compliance", "/contact"];
   const abs = (path: string) => `${company.url}${path === "/" ? "" : path}`;
   return [
@@ -15,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       })),
     ),
     // English-only pages.
-    ...["/privacy", "/terms"].map((path) => ({ url: abs(path) })),
+    ...["/privacy", "/terms", "/blog"].map((path) => ({ url: abs(path) })),
+    ...(await getPosts()).map((p) => ({ url: abs(`/blog/${p.slug}`), lastModified: p.updated_at })),
   ];
 }

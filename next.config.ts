@@ -7,15 +7,17 @@ const cspHashes: Record<string, string[]> = existsSync("csp-hashes.json")
   : {};
 
 const TURNSTILE = "https://challenges.cloudflare.com";
+// Only the blog admin page talks to Supabase from the browser (sign-in and saving posts).
+const SUPABASE = "https://brzuwbtrcalafzqumhqv.supabase.co";
 
-const csp = (hashes: string[]) =>
+const csp = (hashes: string[], connect = "") =>
   [
     "default-src 'self'",
     `script-src 'self' ${TURNSTILE} ${hashes.join(" ")}`.trim(),
     "style-src 'self'",
     "img-src 'self' data:",
     "font-src 'self'",
-    "connect-src 'self'",
+    `connect-src 'self' ${connect}`.trim(),
     `frame-src ${TURNSTILE}`,
     "frame-ancestors 'none'",
     "base-uri 'self'",
@@ -57,7 +59,7 @@ const config: NextConfig = {
       // English pages are built as /en/... but visited without the prefix (see rewrites below).
       ...Object.entries(pages).map(([route, hashes]) => ({
         source: route === "/en" ? "/" : route.startsWith("/en/") ? route.slice(3) : route,
-        headers: [{ key: "Content-Security-Policy", value: csp(hashes) }],
+        headers: [{ key: "Content-Security-Policy", value: csp(hashes, route === "/en/admin" ? SUPABASE : "") }],
       })),
     ];
   },

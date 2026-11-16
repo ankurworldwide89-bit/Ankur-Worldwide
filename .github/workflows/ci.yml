@@ -26,6 +26,7 @@ jobs:
         env:
           # Cloudflare's public always-pass test key; the real site key is set in Vercel.
           NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+          BLOG_OFFLINE: "1" # CI checks the code; it must not depend on the live database being awake
       - run: npm audit --audit-level=high
       - uses: gitleaks/gitleaks-action@v3
         env:
