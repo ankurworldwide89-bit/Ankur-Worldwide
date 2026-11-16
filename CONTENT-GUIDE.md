@@ -86,8 +86,8 @@ keeps its size and colour in the header and footer. Then update the two other pl
 
 ## Change text on a page
 
-Page wording is in the page files under `app/`, for example `app/page.tsx` for the home page.
-The About chapters are in `content/about.ts`.
+All page wording, including the About chapters, is in `content/i18n/en.ts` and its translations
+(see "Languages" below). The page layouts are in `app/[lang]/`.
 
 ## After a lawyer approves the legal pages
 
