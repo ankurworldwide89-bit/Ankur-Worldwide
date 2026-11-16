@@ -34,16 +34,20 @@ grant select on public.posts to anon, authenticated;
 grant insert, update, delete on public.posts to authenticated;
 
 -- True only for a listed admin who has completed two-factor login in this session.
+-- SECURITY DEFINER so that visitors, who may not read blog_admins, can still be evaluated by the posts policy
+-- (they simply get false). It reveals nothing: it only answers "is the CALLER an admin".
 create or replace function public.is_blog_admin()
 returns boolean
 language sql
 stable
-security invoker
+security definer
 set search_path = ''
 as $$
   select coalesce(auth.jwt() ->> 'aal', '') = 'aal2'
      and exists (select 1 from public.blog_admins where user_id = auth.uid());
 $$;
+revoke all on function public.is_blog_admin() from public;
+grant execute on function public.is_blog_admin() to anon, authenticated;
 
 drop policy if exists "public reads published" on public.posts;
 create policy "public reads published" on public.posts for select to anon, authenticated
