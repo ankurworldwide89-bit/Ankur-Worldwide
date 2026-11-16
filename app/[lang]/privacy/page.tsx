@@ -9,6 +9,10 @@ export const metadata: Metadata = {
 };
 
 // DRAFT for the owner's lawyer. Written for India's DPDP Act 2023 and EU/UK GDPR.
+// Legal text exists in English only, so this page is built for English alone.
+export const dynamicParams = false;
+export const generateStaticParams = () => [{ lang: "en" }];
+
 export default function Privacy() {
   const mail = <a href={`mailto:${company.email}`}>{company.email}</a>;
   return (

@@ -1,29 +1,17 @@
 "use client";
 
 import { useState } from "react";
-
-// A typical bamboo-core incense stick, described in general terms. Blends differ by fragrance.
-const parts = [
-  ["Bamboo core", "A thin bamboo splint runs the full length. Its bare end is the handle that sits in the holder."],
-  ["Base paste", "Charcoal and wood powder bound with jigat, a natural bark gum, rolled around the bamboo. This is what burns slowly and evenly."],
-  ["Fragrance layer", "Aromatic powders and perfume oils on the outside. Heat from the ember releases the scent."],
-  ["Ember", "The lit tip. It travels down the stick, burning the paste and carrying the fragrance into the air."],
-] as const;
+import type { Dict } from "@/content/i18n/en";
 
 // One click takes the stick apart in 3D: the three layers separate and a cross-section shows the inside.
+// The four parts describe a typical bamboo-core incense stick; the wording comes from the language files.
 // `compact` is the landing-page version: the stick with part names only, no descriptions.
 // All geometry and motion is in globals.css (".anatomy"), because the site's security policy forbids inline styles.
-export function StickAnatomy({ compact }: { compact?: boolean }) {
+export function StickAnatomy({ t, compact }: { t: Dict["anatomy"]; compact?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={compact ? "anatomy anatomy-hero" : "anatomy"} data-open={open}>
-      <button
-        type="button"
-        className="anatomy-stage"
-        aria-pressed={open}
-        aria-label={open ? "Put the incense stick back together" : "Take the incense stick apart to see its layers"}
-        onClick={() => setOpen(!open)}
-      >
+    <div className={compact ? "anatomy anatomy-hero" : "anatomy"} data-open={open} dir="ltr">
+      <button type="button" className="anatomy-stage" aria-pressed={open} aria-label={open ? t.ariaClose : t.ariaOpen} onClick={() => setOpen(!open)}>
         <span className="stick3d" aria-hidden="true">
           <span className="layer core">
             <i>1</i>
@@ -38,29 +26,29 @@ export function StickAnatomy({ compact }: { compact?: boolean }) {
             </b>
           </span>
           <span className="xsection">
-            <em>Inside</em>
+            <em>{t.inside}</em>
           </span>
         </span>
-        <span className="anatomy-hint">{open ? "Click to close" : "Click the stick to open it"}</span>
+        <span className="anatomy-hint">{open ? t.close : t.open}</span>
       </button>
 
       {compact ? (
         <ol className="anatomy-legend">
-          {parts.map(([name], i) => (
-            <li key={name}>
+          {t.parts.map((p, i) => (
+            <li key={p.name}>
               <span aria-hidden="true">{i + 1}</span>
-              {name}
+              {p.name}
             </li>
           ))}
         </ol>
       ) : (
         <ol className="anatomy-parts">
-          {parts.map(([name, text], i) => (
-            <li key={name}>
+          {t.parts.map((p, i) => (
+            <li key={p.name}>
               <span aria-hidden="true">{i + 1}</span>
               <div>
-                <h3 className="display text-3xl">{name}</h3>
-                <p className="mt-2 leading-relaxed text-muted">{text}</p>
+                <h3 className="display text-3xl">{p.name}</h3>
+                <p className="mt-2 leading-relaxed text-muted">{p.text}</p>
               </div>
             </li>
           ))}

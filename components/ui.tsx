@@ -21,8 +21,21 @@ export function Button({
   return (
     <Link href={href} className={buttonStyles[variant]}>
       {children}
-      {variant !== "text" && <span aria-hidden="true">→</span>}
+      {variant !== "text" && (
+        <span aria-hidden="true" className="arrow">
+          →
+        </span>
+      )}
     </Link>
+  );
+}
+
+// A two-part headline from the language files: plain text, then the gold italic part.
+export function Gilt({ h }: { h: { a: string; b: string } }) {
+  return (
+    <>
+      {h.a} <span className="gilt">{h.b}</span>
+    </>
   );
 }
 

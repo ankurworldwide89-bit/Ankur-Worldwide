@@ -92,3 +92,19 @@ The About chapters are in `content/about.ts`.
 ## After a lawyer approves the legal pages
 
 Set `legalReviewed: true` in `content/company.ts`. The "Draft" notice disappears.
+
+## Languages
+
+The site is published in English (main), Arabic, Spanish, French, German, Russian, Portuguese and Chinese.
+
+- English pages are at the plain address (`/about`). Other languages add their code (`/ar/about`, `/zh/about`).
+- All page text lives in `content/i18n/`, one file per language. `en.ts` is the source; every other file must
+  have exactly the same keys. `npm test` fails if a language is missing a line or a list item.
+- **To change wording**, edit `en.ts` and the same line in each other file. If you cannot translate it, ask for
+  the translation rather than leaving English inside another language's file.
+- **Product text**: English comes from `content/products/*.ts`; translations are under `products` in each
+  language file, keyed by the product's address (`incense-sticks`, `dhoop`). A new product needs an entry in
+  every language file, with one `range` line per collection.
+- Fragrance names, the shop name and the company name are proper names and are not translated.
+- Privacy Policy and Terms are English only, on purpose: legal text should not be machine-translated.
+- Arabic reads right to left. The layout flips automatically; check new sections in Arabic before publishing.

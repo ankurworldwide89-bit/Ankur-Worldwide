@@ -38,7 +38,7 @@ for (const [file, f] of pages) {
   }
   routes[route] = [...hashes].sort();
 }
-if (!routes["/"]) {
+if (!routes["/en"]) { // the English home page is built as /en
   console.error(`Home page not found among ${pages.length} built pages. Run "next build" first.`);
   console.error(pages.map(([file]) => file).slice(0, 40).join("\n"));
   process.exit(1);

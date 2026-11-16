@@ -1,18 +1,20 @@
 import type { MetadataRoute } from "next";
 import { company } from "@/content/company";
 import { products } from "@/content/products";
+import { alternates, href, locales } from "@/lib/i18n";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const paths = [
-    "",
-    "/products",
-    ...products.map((p) => `/products/${p.slug}`),
-    "/about",
-    "/group",
-    "/compliance",
-    "/contact",
-    "/privacy",
-    "/terms",
+  const translated = ["/", "/products", ...products.map((p) => `/products/${p.slug}`), "/about", "/group", "/compliance", "/contact"];
+  const abs = (path: string) => `${company.url}${path === "/" ? "" : path}`;
+  return [
+    // One entry per page per language, each listing its translations.
+    ...translated.flatMap((path) =>
+      locales.map((lang) => ({
+        url: abs(href(lang, path)),
+        alternates: { languages: Object.fromEntries(Object.entries(alternates(lang, path).languages).map(([l, p]) => [l, abs(p)])) },
+      })),
+    ),
+    // English-only pages.
+    ...["/privacy", "/terms"].map((path) => ({ url: abs(path) })),
   ];
-  return paths.map((p) => ({ url: `${company.url}${p}` }));
 }

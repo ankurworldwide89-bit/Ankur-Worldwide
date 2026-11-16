@@ -9,6 +9,10 @@ export const metadata: Metadata = {
 };
 
 // DRAFT for the owner's lawyer. Governing-law and jurisdiction wording in particular needs their decision.
+// Legal text exists in English only, so this page is built for English alone.
+export const dynamicParams = false;
+export const generateStaticParams = () => [{ lang: "en" }];
+
 export default function Terms() {
   return (
     <Legal title="Terms of Use" updated="11 November 2026">

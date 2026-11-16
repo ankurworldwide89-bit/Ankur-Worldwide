@@ -2,6 +2,7 @@
 
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
+import type { Dict } from "@/content/i18n/en";
 
 type Turnstile = {
   render(el: HTMLElement, options: { sitekey: string; theme: "light" }): string;
@@ -18,16 +19,11 @@ declare global {
 const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
 const field = "mt-2 w-full border-b border-muted bg-transparent py-3 text-base text-fg [&>option]:bg-surface";
-const messages = {
-  verify: "Please complete the verification below, then send again.",
-  limited: "Too many inquiries from your network. Please try again in an hour, or email us.",
-  error: "Something went wrong and your inquiry was not sent. Please try again, or email us.",
-};
 
-export function InquiryForm({ products, email }: { products: { slug: string; name: string }[]; email: string }) {
+export function InquiryForm({ t, products, email }: { t: Dict["form"]; products: { slug: string; name: string }[]; email: string }) {
   if (!siteKey) throw new Error("NEXT_PUBLIC_TURNSTILE_SITE_KEY is not set (see .env.example)");
 
-  const [state, setState] = useState<"idle" | "sending" | "sent" | keyof typeof messages>("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "verify" | "limited" | "error">("idle");
   const [product, setProduct] = useState("");
   const [documents, setDocuments] = useState(false);
   const box = useRef<HTMLDivElement>(null);
@@ -89,54 +85,56 @@ export function InquiryForm({ products, email }: { products: { slug: string; nam
   if (state === "sent") {
     return (
       <div role="status" className="rounded-[2rem] border border-accent p-8">
-        <h2 className="display text-3xl">Thank you. Your inquiry is with us.</h2>
-        <p className="mt-4 text-muted">We reply by email.</p>
+        <h2 className="display text-3xl">{t.thanksH}</h2>
+        <p className="mt-4 text-muted">{t.thanksP}</p>
       </div>
     );
   }
 
+  const problem = state === "verify" || state === "limited" || state === "error" ? t[state] : null;
+
   return (
     <form onSubmit={onSubmit} className="grid gap-8 md:grid-cols-2">
       <label className="text-sm text-muted">
-        Your name
+        {t.name}
         <input name="name" required maxLength={100} autoComplete="name" className={field} />
       </label>
       <label className="text-sm text-muted">
-        Company
+        {t.company}
         <input name="company" required maxLength={150} autoComplete="organization" className={field} />
       </label>
       <label className="text-sm text-muted">
-        Email
-        <input name="email" type="email" required maxLength={254} autoComplete="email" className={field} />
+        {t.email}
+        <input name="email" type="email" dir="ltr" required maxLength={254} autoComplete="email" className={field} />
       </label>
       <label className="text-sm text-muted">
-        Phone or WhatsApp (optional)
-        <input name="phone" type="tel" maxLength={30} pattern="[+\d][\d\s().\-]*" autoComplete="tel" className={field} />
+        {t.phone}
+        <input name="phone" type="tel" dir="ltr" maxLength={30} pattern="[+\d][\d\s().\-]*" autoComplete="tel" className={field} />
       </label>
       <label className="text-sm text-muted">
-        Destination country
+        {t.country}
         <input name="country" required maxLength={80} autoComplete="country-name" className={field} />
       </label>
       <label className="text-sm text-muted">
-        Product
+        {t.product}
         <select name="product" required value={product} onChange={(e) => setProduct(e.target.value)} className={field}>
           <option value="" disabled>
-            Select
+            {t.select}
           </option>
           {products.map((p) => (
             <option key={p.slug} value={p.slug}>
               {p.name}
             </option>
           ))}
-          <option value="other">Other</option>
+          <option value="other">{t.other}</option>
         </select>
       </label>
       <label className="text-sm text-muted md:col-span-2">
-        Quantity
-        <input name="quantity" required maxLength={100} placeholder="For example: one 20-foot container" className={`${field} placeholder:text-muted/70`} />
+        {t.quantity}
+        <input name="quantity" required maxLength={100} placeholder={t.quantityPh} className={`${field} placeholder:text-muted/70`} />
       </label>
       <label className="text-sm text-muted md:col-span-2">
-        Message (optional)
+        {t.message}
         <textarea name="message" rows={4} maxLength={2000} className={field} />
       </label>
 
@@ -149,14 +147,15 @@ export function InquiryForm({ products, email }: { products: { slug: string; nam
 
       <label className="flex items-start gap-3 text-sm md:col-span-2">
         <input type="checkbox" checked={documents} onChange={(e) => setDocuments(e.target.checked)} className="mt-1 size-4 accent-accent" />
-        Please also send me your company registration documents.
+        {t.docs}
       </label>
       <label className="flex items-start gap-3 text-sm md:col-span-2">
         <input type="checkbox" name="consent" required className="mt-1 size-4 accent-accent" />
         <span>
-          I agree that Ankur Worldwide may use these details to reply to my inquiry, as described in the{" "}
+          {t.consent}{" "}
+          {/* The policy exists in English only. */}
           <a href="/privacy" className="underline underline-offset-4">
-            Privacy Policy
+            {t.privacy}
           </a>
           .
         </span>
@@ -171,12 +170,12 @@ export function InquiryForm({ products, email }: { products: { slug: string; nam
           disabled={state === "sending"}
           className="press rounded-full bg-action px-8 py-4 text-sm font-bold tracking-wide text-action-fg disabled:opacity-60"
         >
-          {state === "sending" ? "Sending…" : "Send inquiry"}
+          {state === "sending" ? t.sending : t.send}
         </button>
         <p role="alert" className="mt-4 min-h-6 text-sm text-accent">
-          {state in messages && (
+          {problem && (
             <>
-              {messages[state as keyof typeof messages]}{" "}
+              {problem}{" "}
               {state !== "verify" && (
                 <a href={`mailto:${email}`} className="underline underline-offset-4">
                   {email}

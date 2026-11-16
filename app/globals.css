@@ -684,3 +684,26 @@ details > summary::-webkit-details-marker {
     --lift: 3.6rem;
   }
 }
+
+/* ---------- Languages ---------- */
+/* Arabic letters join up; letter-spacing breaks the joins, and it has no capitals or italics. */
+:lang(ar) * {
+  letter-spacing: 0 !important;
+}
+:lang(ar) .gilt,
+:lang(zh) .gilt {
+  font-style: normal;
+}
+/* Arabic and Chinese headlines use system fonts with taller lines than the Latin display face. */
+:lang(ar) .display,
+:lang(zh) .display {
+  line-height: 1.25;
+}
+/* Arrows point the way the text reads. */
+[dir="rtl"] .arrow {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+[dir="rtl"] .eyebrow::before {
+  order: 0;
+}

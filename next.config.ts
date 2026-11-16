@@ -36,8 +36,13 @@ const securityHeaders = [
   { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
 ];
 
+// Keep in step with `locales` in lib/i18n.ts (English excluded).
+const otherLocales = "ar|es|fr|de|ru|pt|zh";
+
 const config: NextConfig = {
   poweredByHeader: false,
+  // Lets app/global-not-found.tsx be a static 404 page with its own <html> (the layout lives under [lang]).
+  experimental: { globalNotFound: true },
   // The build ID is embedded in inline scripts. It must be identical in both passes of
   // `npm run build`, or the CSP hashes from pass one would not match pass two.
   generateBuildId: () => process.env.VERCEL_GIT_COMMIT_SHA ?? "local",
@@ -49,10 +54,26 @@ const config: NextConfig = {
     return [
       // Everything, including 404s. Later entries override the CSP for their exact page.
       { source: "/:path*", headers: [...securityHeaders, { key: "Content-Security-Policy", value: csp(fallback) }] },
-      ...Object.entries(pages).map(([source, hashes]) => ({
-        source,
+      // English pages are built as /en/... but visited without the prefix (see rewrites below).
+      ...Object.entries(pages).map(([route, hashes]) => ({
+        source: route === "/en" ? "/" : route.startsWith("/en/") ? route.slice(3) : route,
         headers: [{ key: "Content-Security-Policy", value: csp(hashes) }],
       })),
+    ];
+  },
+  // English is the main language and has no prefix: /about shows the page built as /en/about.
+  // Any path that does not start with another language code (or a system path) is treated as English.
+  async rewrites() {
+    return [
+      { source: "/", destination: "/en" },
+      { source: `/:path((?!(?:${otherLocales})(?:/|$)|en(?:/|$)|api/|_next/|_vercel/).+)`, destination: "/en/:path" },
+    ];
+  },
+  // The prefixed English address would duplicate every page, so it redirects to the plain one.
+  async redirects() {
+    return [
+      { source: "/en", destination: "/", permanent: true },
+      { source: "/en/:path*", destination: "/:path*", permanent: true },
     ];
   },
 };

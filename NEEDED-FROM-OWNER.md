@@ -82,3 +82,9 @@ Please confirm or supply:
 - HS code 3307.41.00 and "minimum order confirmed with your quotation" are still unconfirmed placeholders.
 - The four-part description of an incense stick (bamboo core, base paste, fragrance layer, ember) is a
   general description of a bamboo-core agarbatti. Correct it if your partner's sticks are made differently.
+
+## Translations
+
+The site is now in 8 languages. The 7 translations were written by Claude and have **not** been checked by a
+native speaker. Before relying on a language for real buyers, have a fluent person read its home, product
+and contact pages. Arabic and Chinese matter most, because errors there are hardest for you to spot.
