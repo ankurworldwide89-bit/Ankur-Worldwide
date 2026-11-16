@@ -37,7 +37,7 @@ The one place with a login. Design choices that keep it small:
 
 - **Accounts:** public sign-up is switched off in Supabase; the owner creates their account by hand.
 - **Two-factor required:** the database refuses writes unless the session has passed TOTP two-factor (aal2) and
-  the user is listed in . This is enforced by Row Level Security, not just by the page.
+  the user is listed in `blog_admins`. This is enforced by Row Level Security, not just by the page.
 - **Session:** kept in sessionStorage, so closing the tab signs out. Supabase rate-limits sign-in attempts.
 - **No server secrets in the browser:** the admin page holds only the public key. Rebuilds go through
   `/api/publish`, which re-checks the session, two-factor and admin status before calling the deploy hook.
