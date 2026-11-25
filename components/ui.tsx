@@ -4,8 +4,8 @@ import { images } from "@/content/images/manifest";
 import { Mandala } from "./art";
 
 const buttonStyles = {
-  primary: "press inline-flex items-center gap-3 rounded-full bg-action px-8 py-4 text-sm font-bold tracking-wide text-action-fg",
-  ghost: "press inline-flex items-center gap-3 rounded-full border border-fg/30 px-8 py-4 text-sm font-semibold tracking-wide",
+  primary: "press inline-flex items-center gap-3 rounded-md bg-action px-7 py-3.5 text-sm font-bold tracking-wide text-action-fg",
+  ghost: "press inline-flex items-center gap-3 rounded-md border border-fg/30 px-7 py-3.5 text-sm font-semibold tracking-wide",
   text: "border-b border-accent pb-0.5 text-sm font-semibold transition-colors hover:text-accent",
 };
 

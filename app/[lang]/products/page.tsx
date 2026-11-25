@@ -16,11 +16,11 @@ export default async function Products({ params }: LangParams) {
   return (
     <>
       <PageHeader eyebrow={pp.title} title={<Gilt h={pp.h} />} intro={pp.intro} />
-      <div className="zoom-stage mx-auto grid max-w-7xl gap-8 px-6 py-24 md:grid-cols-2 md:px-10 md:py-32">
+      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-24 md:grid-cols-2 md:px-10 md:py-32">
         {products.map((base) => {
           const p = { ...base, ...t.products[base.slug] };
           return (
-            <Link key={p.slug} href={L(`/products/${p.slug}`)} className="card3d card-zoom group relative overflow-hidden rounded-[2rem] border border-line bg-surface">
+            <Link key={p.slug} href={L(`/products/${p.slug}`)} className="card3d group relative overflow-hidden rounded-[2rem] border border-line bg-surface">
               <div data-tone="dark" className="relative aspect-[4/3] overflow-hidden bg-bg">
                 <div className="glow absolute inset-0 m-auto size-4/5" aria-hidden="true" />
                 <IncenseBundle className="absolute inset-0 size-full p-8 transition-transform duration-700 group-hover:scale-105" />

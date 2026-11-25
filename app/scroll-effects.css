@@ -1,9 +1,9 @@
 /* ---------- Scroll effects (home page). Layout first: the page works with no motion at all. ----------
-   All motion is CSS scroll-driven animation: no JavaScript, nothing for the security policy to allow,
-   and the browser runs it off the main thread. Browsers without support, and visitors who ask for
-   reduced motion, get the plain layout. */
+   Kept deliberately few and quiet. All motion is CSS scroll-driven animation: no JavaScript, nothing for
+   the security policy to allow, and the browser runs it off the main thread. Browsers without support,
+   and visitors who ask for reduced motion, get the plain layout. */
 
-/* 2 + 8. "Why us": the heading stays pinned while the reason cards stack on top of each other. */
+/* "Why us": the heading stays pinned while the reason cards stack on top of each other. */
 .why-grid {
   display: grid;
   gap: 3rem;
@@ -21,76 +21,39 @@
 }
 .stack {
   display: grid;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 .stack > li {
   position: sticky;
   top: 6rem;
   border: 1px solid var(--line);
-  border-radius: 2rem;
+  border-radius: 1rem;
   background: var(--surface);
   padding: 2rem;
-  box-shadow: 0 -18px 40px -28px color-mix(in srgb, var(--fg) 50%, transparent);
 }
 .stack > li:nth-child(2) {
-  top: 7.25rem;
+  top: 7rem;
 }
 .stack > li:nth-child(3) {
-  top: 8.5rem;
+  top: 8rem;
 }
 .stack > li:nth-child(4) {
-  top: 9.75rem;
+  top: 9rem;
 }
 .stack > li:nth-child(5) {
-  top: 11rem;
+  top: 10rem;
 }
 .stack > li:nth-child(6) {
-  top: 12.25rem;
+  top: 11rem;
 }
 @media (min-width: 768px) {
   .stack > li {
-    padding: 2.75rem;
-    min-height: 16rem;
+    padding: 2.5rem;
+    min-height: 14rem;
   }
 }
 
-/* 6. "How an order works": a sideways row of cards that bend along an arc as they pass the middle. */
-.arc-track {
-  display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 3rem calc(50% - min(39vw, 11rem)) 4rem;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
-}
-.arc-track > li {
-  flex: none;
-  width: min(78vw, 22rem);
-  scroll-snap-align: center;
-  border: 1px solid var(--line);
-  border-radius: 2rem;
-  background: var(--surface);
-  padding: 2rem;
-}
-
-/* 9. Facts on phones and tablets: a sideways slider where the card in the middle is in focus. */
-@media (max-width: 1023px) {
-  .focus-track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding-inline: calc(50% - 36vw);
-    scrollbar-width: none;
-  }
-  .focus-track > div {
-    flex: none;
-    width: 72vw;
-    scroll-snap-align: center;
-  }
-}
-
-/* 7. The 3D stick stays fixed on screen while its four parts scroll past (large screens). */
+/* The 3D stick stays fixed on screen while its four parts scroll past (large screens). */
 @media (min-width: 1024px) {
   .anatomy-full {
     display: grid;
@@ -116,24 +79,12 @@
   transform-style: preserve-3d;
 }
 
-/* 5. Giant words sliding sideways. */
-.slide-row {
-  white-space: nowrap;
-  font-size: clamp(3rem, 9vw, 8rem);
-}
-
-/* 3. 3D card zoom: cards come forward out of the page. */
-.zoom-stage {
-  perspective: 1200px;
-}
-
-/* 10. Scroll-triggered demo: an inquiry card fills itself in while the section is pinned. */
+/* Scroll-triggered demo: an inquiry card fills itself in while the section is pinned. */
 .demo-card {
   border: 1px solid var(--line);
-  border-radius: 2rem;
+  border-radius: 1rem;
   background: var(--surface);
   padding: 2rem;
-  box-shadow: 0 40px 80px -40px color-mix(in srgb, var(--fg) 55%, transparent);
 }
 .demo-field {
   display: block;
@@ -142,11 +93,10 @@
 }
 .demo-fill {
   display: block;
-  height: 0.7rem;
+  height: 0.6rem;
   margin-top: 0.6rem;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--accent), #e0672f);
-  opacity: 0.75;
+  background: var(--line);
   transform-origin: left;
 }
 [dir="rtl"] .demo-fill {
@@ -160,28 +110,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    /* 1. Layered parallax in the hero: the glow sinks slowly, the smoke rises fast, the text recedes. */
-    .depth-slow,
-    .depth-fast {
-      animation: depth-slow linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 100vh;
-    }
-    .depth-fast {
-      animation-name: depth-fast;
-    }
-    @keyframes depth-slow {
-      to {
-        translate: 0 10rem;
-      }
-    }
-    @keyframes depth-fast {
-      to {
-        translate: 0 -14rem;
-      }
-    }
-
-    /* 8. Each card grows to full size as it slides up over the one before. */
+    /* Each reason card settles to full size as it slides up over the one before. */
     .stack > li {
       transform-origin: 50% 0;
       animation: stack-in linear both;
@@ -190,60 +119,12 @@
     }
     @keyframes stack-in {
       from {
-        opacity: 0.4;
-        scale: 0.92;
+        opacity: 0.5;
+        scale: 0.96;
       }
     }
 
-    /* 6. Each card tilts around a point far below the row, so the row reads as an arc. */
-    .arc-track > li {
-      transform-origin: 50% 260%;
-      animation: arc linear both;
-      animation-timeline: view(inline);
-    }
-    @keyframes arc {
-      from {
-        rotate: -14deg;
-        opacity: 0.45;
-      }
-      50% {
-        rotate: 0deg;
-        opacity: 1;
-      }
-      to {
-        rotate: 14deg;
-        opacity: 0.45;
-      }
-    }
-
-    /* 9. Focus frame: sharp in the middle, small and faint at the edges. Large screens: a plain reveal. */
-    @media (max-width: 1023px) {
-      .focus-card {
-        animation: focus linear both;
-        animation-timeline: view(inline);
-      }
-    }
-    @keyframes focus {
-      from,
-      to {
-        opacity: 0.3;
-        scale: 0.82;
-      }
-      50% {
-        opacity: 1;
-        scale: 1;
-      }
-    }
-    @media (min-width: 1024px) {
-      .focus-card {
-        transform-origin: 50% 100%;
-        animation: reveal linear both;
-        animation-timeline: view();
-        animation-range: entry 0% entry 70%;
-      }
-    }
-
-    /* 4. Line-by-line reveal: each line wipes up into view on its own. */
+    /* Line-by-line reveal: each line rises into view on its own. */
     .line-reveal {
       animation: line-reveal linear both;
       animation-timeline: view();
@@ -252,15 +133,11 @@
     @keyframes line-reveal {
       from {
         opacity: 0;
-        translate: 0 1.5rem;
-        clip-path: inset(100% 0 0 0);
-      }
-      to {
-        clip-path: inset(0 0 0 0);
+        translate: 0 1rem;
       }
     }
 
-    /* 7. The fixed stick turns as the parts list scrolls by. */
+    /* The fixed stick turns slowly as the parts list scrolls by. */
     .anatomy-full {
       view-timeline-name: --anatomy;
     }
@@ -271,57 +148,16 @@
     }
     @keyframes stick-turn {
       from {
-        rotate: y -28deg;
+        rotate: y -20deg;
       }
       to {
-        rotate: y 28deg;
+        rotate: y 20deg;
       }
     }
 
-    /* 5. Two rows of words slide in opposite directions. */
-    .slide-left,
-    .slide-right {
-      animation: slide-left linear both;
-      animation-timeline: view();
-      animation-range: cover;
-    }
-    .slide-right {
-      animation-name: slide-right;
-    }
-    @keyframes slide-left {
-      from {
-        translate: 5% 0;
-      }
-      to {
-        translate: -45% 0;
-      }
-    }
-    @keyframes slide-right {
-      from {
-        translate: -45% 0;
-      }
-      to {
-        translate: 5% 0;
-      }
-    }
-
-    /* 3. Cards fly forward from deep in the page. */
-    .card-zoom {
-      animation: card-zoom linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 40%;
-    }
-    @keyframes card-zoom {
-      from {
-        opacity: 0;
-        translate: 0 3rem -420px;
-        rotate: x 24deg;
-      }
-    }
-
-    /* 10. The demo section is tall; its card stays pinned while the fields fill one by one. */
+    /* The demo section is tall; its card stays pinned while the fields fill one by one. */
     .demo {
-      height: 280vh;
+      height: 260vh;
       view-timeline-name: --demo;
     }
     .demo-pin {
@@ -369,22 +205,17 @@
     }
     @keyframes demo-text {
       from {
-        clip-path: inset(0 100% 0 0);
-      }
-      to {
-        clip-path: inset(0 0 0 0);
+        opacity: 0;
       }
     }
     @keyframes demo-send {
       50% {
-        scale: 0.92;
-        filter: brightness(1.3);
+        scale: 0.95;
       }
     }
     @keyframes demo-done {
       from {
         opacity: 0;
-        translate: 0 1rem;
       }
     }
   }
