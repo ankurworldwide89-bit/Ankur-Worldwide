@@ -20,7 +20,7 @@ export function getPosts(): Promise<Post[]> {
   cache ??= (async () => {
     const res = await fetch(
       `${SUPABASE_URL}/rest/v1/posts?select=slug,title,excerpt,body,published_at,updated_at&published=eq.true&order=published_at.desc`,
-      { headers: { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}` }, cache: "no-store" },
+      { headers: { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}` }, cache: "no-store", signal: AbortSignal.timeout(30_000) }, // a paused free database can take a while to wake
     );
     if (!res.ok) throw new Error(`Could not load blog posts: Supabase responded ${res.status}`);
     return (await res.json()) as Post[];

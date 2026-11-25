@@ -10,9 +10,10 @@ import type { Dict } from "@/content/i18n/en";
 export function StickAnatomy({ t, compact }: { t: Dict["anatomy"]; compact?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className={compact ? "anatomy anatomy-hero" : "anatomy"} data-open={open} dir="ltr">
+    <div className={compact ? "anatomy anatomy-hero" : "anatomy anatomy-full"} data-open={open} dir="ltr">
       <button type="button" className="anatomy-stage" aria-pressed={open} aria-label={open ? t.ariaClose : t.ariaOpen} onClick={() => setOpen(!open)}>
-        <span className="stick3d" aria-hidden="true">
+        <span className="stick-spin" aria-hidden="true">
+          <span className="stick3d">
           <span className="layer core">
             <i>1</i>
           </span>
@@ -27,6 +28,7 @@ export function StickAnatomy({ t, compact }: { t: Dict["anatomy"]; compact?: boo
           </span>
           <span className="xsection">
             <em>{t.inside}</em>
+          </span>
           </span>
         </span>
         <span className="anatomy-hint">{open ? t.close : t.open}</span>

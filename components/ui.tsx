@@ -54,7 +54,7 @@ export function Section({
   id?: string;
 }) {
   return (
-    <section id={id} data-tone={tone} className="relative overflow-hidden bg-bg text-fg">
+    <section id={id} data-tone={tone} className="relative overflow-clip bg-bg text-fg">
       <div className="mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-36">
         {eyebrow && <p className="eyebrow reveal">{eyebrow}</p>}
         {title && <h2 className="display reveal mt-6 max-w-4xl text-5xl md:text-7xl">{title}</h2>}

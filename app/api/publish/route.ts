@@ -1,3 +1,4 @@
+import { fetchWithTimeout } from "@/lib/http";
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/lib/supabase-public";
 
 // Rebuilds the live site so new or changed blog posts appear. Only a blog admin who has signed in with
@@ -26,19 +27,19 @@ export async function POST(req: Request) {
     const auth = { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${token}` };
 
     // Supabase checks the token's signature and expiry; a 200 means it is a real, current session.
-    const user = await fetch(`${SUPABASE_URL}/auth/v1/user`, { headers: auth });
+    const user = await fetchWithTimeout(`${SUPABASE_URL}/auth/v1/user`, { headers: auth });
     if (!user.ok) return reply(401);
     const { id } = (await user.json()) as { id?: string };
     // The token was just verified by Supabase, so its claims can be trusted.
     if (!id || claims(token).aal !== "aal2" || claims(token).sub !== id) return reply(403);
 
     // Row Level Security lets a user see only their own admin row, so this proves admin status.
-    const admin = await fetch(`${SUPABASE_URL}/rest/v1/blog_admins?select=user_id&user_id=eq.${encodeURIComponent(id)}`, { headers: auth });
+    const admin = await fetchWithTimeout(`${SUPABASE_URL}/rest/v1/blog_admins?select=user_id&user_id=eq.${encodeURIComponent(id)}`, { headers: auth });
     if (!admin.ok || ((await admin.json()) as unknown[]).length !== 1) return reply(403);
 
     const hook = process.env.VERCEL_DEPLOY_HOOK_URL;
     if (!hook) return reply(503);
-    const build = await fetch(hook, { method: "POST" });
+    const build = await fetchWithTimeout(hook, { method: "POST" });
     if (!build.ok) throw new Error(`Deploy hook responded ${build.status}`);
     return reply(200, true);
   } catch (err) {

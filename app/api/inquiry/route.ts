@@ -1,4 +1,5 @@
-import { createHmac } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
+import { fetchWithTimeout, retry } from "@/lib/http";
 import { Inquiry } from "@/lib/inquiry";
 
 // The only server code on the site. Order: size and origin checks, validation, honeypot,
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
     // upgrade by restricting Vercel to Cloudflare traffic (see SECURITY.md) if abuse appears.
     const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
 
-    const check = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    const check = await fetchWithTimeout("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
       method: "POST",
       body: new URLSearchParams({ secret: env("TURNSTILE_SECRET_KEY"), response: token, ...(ip && { remoteip: ip }) }),
     });
@@ -59,7 +60,7 @@ export async function POST(req: Request) {
     let saved = false;
     try {
       const key = env("SUPABASE_SERVICE_ROLE_KEY");
-      const db = await fetch(`${env("SUPABASE_URL")}/rest/v1/rpc/submit_inquiry`, {
+      const db = await fetchWithTimeout(`${env("SUPABASE_URL")}/rest/v1/rpc/submit_inquiry`, {
         method: "POST",
         headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
         body: JSON.stringify({ p: inquiry, p_ip_hash: ipHash }),
@@ -75,9 +76,11 @@ export async function POST(req: Request) {
 
     let emailed = false;
     try {
-      const mail = await fetch("https://api.resend.com/emails", {
+      // The same inquiry always gets the same key, so a retry (or a repeat within 24 hours) is emailed once.
+      const idempotencyKey = `inquiry-${createHash("sha256").update(JSON.stringify(inquiry) + ipHash).digest("hex").slice(0, 48)}`;
+      const mail = await retry(() => fetchWithTimeout("https://api.resend.com/emails", {
         method: "POST",
-        headers: { Authorization: `Bearer ${env("RESEND_API_KEY")}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${env("RESEND_API_KEY")}`, "Content-Type": "application/json", "Idempotency-Key": idempotencyKey },
         body: JSON.stringify({
           from: env("INQUIRY_FROM"),
           to: env("INQUIRY_TO"),
@@ -98,7 +101,7 @@ export async function POST(req: Request) {
             inquiry.message ?? "(no message)",
           ].join("\n"),
         }),
-      });
+      }), 2);
       if (!mail.ok) throw new Error(`Resend responded ${mail.status}`);
       emailed = true;
     } catch (err) {

@@ -7,6 +7,7 @@ import { dict } from "@/content/i18n";
 import { isLocale, isRtl, locales } from "@/lib/i18n";
 import { fontClasses } from "../fonts";
 import "../globals.css";
+import "../scroll-effects.css";
 
 type Props = { children: React.ReactNode; params: Promise<{ lang: string }> };
 

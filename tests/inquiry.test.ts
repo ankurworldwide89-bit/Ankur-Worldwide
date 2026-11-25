@@ -73,6 +73,18 @@ describe("POST /api/inquiry", () => {
     expect(calls(f, "resend")).toHaveLength(1);
   });
 
+  it("sends every email with a time limit and the same idempotency key for the same inquiry", async () => {
+    const f = outside();
+    vi.stubGlobal("fetch", f);
+    await post(valid);
+    await post(valid);
+    const [a, b] = calls(f, "resend").map((c) => c[1]!);
+    const key = (init: RequestInit) => new Headers(init.headers).get("Idempotency-Key");
+    expect(key(a!)).toMatch(/^inquiry-[0-9a-f]{48}$/);
+    expect(key(a!)).toBe(key(b!));
+    expect(a!.signal).toBeInstanceOf(AbortSignal);
+  });
+
   it("returns 429 and sends no email when the rate limit is reached", async () => {
     const f = outside({ rpc: false });
     vi.stubGlobal("fetch", f);

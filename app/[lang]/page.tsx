@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IncenseBundle, Mandala, Routes, Smoke } from "@/components/art";
+import { ScrollDemo } from "@/components/ScrollDemo";
 import { StickAnatomy } from "@/components/StickAnatomy";
 import { Button, Gilt, Section } from "@/components/ui";
 import { company } from "@/content/company";
@@ -21,8 +22,8 @@ export default async function Home({ params }: LangParams) {
     <>
       {/* Hero */}
       <section data-tone="dark" className="relative overflow-hidden bg-bg text-fg">
-        <div className="glow absolute -right-40 top-1/4 size-[52rem]" aria-hidden="true" />
-        <Smoke className="parallax pointer-events-none absolute -right-24 bottom-0 hidden h-[92%] w-auto opacity-25 lg:block" />
+        <div className="glow depth-slow absolute -right-40 top-1/4 size-[52rem]" aria-hidden="true" />
+        <Smoke className="depth-fast pointer-events-none absolute -right-24 bottom-0 hidden h-[92%] w-auto opacity-25 lg:block" />
         <div className="recede relative mx-auto grid min-h-[calc(100svh-4rem)] max-w-7xl items-center gap-6 px-6 py-16 md:px-10 lg:grid-cols-2 lg:py-24">
           <div>
             <p className="eyebrow">
@@ -61,9 +62,9 @@ export default async function Home({ params }: LangParams) {
 
       {/* Facts */}
       <section data-tone="sand" className="bg-bg text-fg">
-        <dl className="mx-auto grid max-w-7xl sm:grid-cols-2 lg:grid-cols-4">
+        <dl className="focus-track mx-auto grid max-w-7xl sm:grid-cols-2 lg:grid-cols-4">
           {h.facts.map((f) => (
-            <div key={f.big} className="reveal border-b border-line px-6 py-14 md:px-10 lg:border-b-0 lg:border-e lg:last:border-e-0">
+            <div key={f.big} className="focus-card border-b border-line px-6 py-14 md:px-10 lg:border-b-0 lg:border-e lg:last:border-e-0">
               <dt className="display text-6xl md:text-7xl">
                 {f.big} <span className="gilt text-4xl md:text-5xl">{f.small}</span>
               </dt>
@@ -90,7 +91,7 @@ export default async function Home({ params }: LangParams) {
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted">{product.description[0]}</p>
             <ul className="mt-10 border-t border-line">
               {h.product.bullets.map((point) => (
-                <li key={point} className="flex items-baseline gap-4 border-b border-line py-5">
+                <li key={point} className="line-reveal flex items-baseline gap-4 border-b border-line py-5">
                   <span aria-hidden="true" className="text-accent">
                     ◆
                   </span>
@@ -116,22 +117,30 @@ export default async function Home({ params }: LangParams) {
         </div>
       </Section>
 
-      {/* Why us */}
-      <Section tone="sand" eyebrow={h.why.eyebrow} title={<Gilt h={h.why.h} />}>
-        <ol className="mt-16 grid gap-x-16 md:grid-cols-2">
-          {h.why.items.map((r, i) => (
-            <li key={r.name} className="reveal flex gap-8 border-t border-line py-10">
-              <span aria-hidden="true" className="display outline-text text-7xl leading-none">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <h3 className="display text-3xl md:text-4xl">{r.name}</h3>
-                <p className="mt-3 max-w-md leading-relaxed text-muted">{r.line}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </Section>
+      {/* Why us: pinned heading on the left, reason cards stacking on the right */}
+      <section data-tone="sand" className="relative overflow-clip bg-bg text-fg">
+        <div className="why-grid mx-auto max-w-7xl px-6 py-24 md:px-10 md:py-36">
+          <div className="pin-heading">
+            <p className="eyebrow">{h.why.eyebrow}</p>
+            <h2 className="display mt-6 text-5xl md:text-7xl">
+              <Gilt h={h.why.h} />
+            </h2>
+          </div>
+          <ol className="stack">
+            {h.why.items.map((r, i) => (
+              <li key={r.name} className="flex gap-8">
+                <span aria-hidden="true" className="display outline-text text-7xl leading-none">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="display text-3xl md:text-4xl">{r.name}</h3>
+                  <p className="mt-3 max-w-md leading-relaxed text-muted">{r.line}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
 
       {/* Heritage */}
       <section data-tone="dark" className="relative overflow-hidden bg-bg text-fg">
@@ -152,9 +161,9 @@ export default async function Home({ params }: LangParams) {
 
       {company.registrations.length > 0 && (
         <Section tone="sand" eyebrow={h.compliance.eyebrow} title={<Gilt h={h.compliance.h} />}>
-          <dl className="mt-12 grid gap-8 md:grid-cols-3">
+          <dl className="zoom-stage mt-12 grid gap-8 md:grid-cols-3">
             {company.registrations.map((r) => (
-              <div key={r.label} className="card3d reveal rounded-3xl border border-line bg-surface p-8">
+              <div key={r.label} className="card3d card-zoom rounded-3xl border border-line bg-surface p-8">
                 <dt className="text-sm text-muted">{r.label.includes("IEC") ? t.compliance.regs.iec : r.label}</dt>
                 <dd className="mt-3 text-2xl font-bold tracking-wider" dir="ltr">
                   {r.number}
@@ -172,21 +181,25 @@ export default async function Home({ params }: LangParams) {
 
       {/* Process */}
       <Section tone="light" eyebrow={h.process.eyebrow} title={<Gilt h={h.process.h} />}>
-        <div className="relative mt-20">
-          <div aria-hidden="true" className="absolute start-7 top-0 h-full w-px bg-line lg:start-0 lg:top-7 lg:h-px lg:w-full" />
-          <ol className="relative grid gap-12 lg:grid-cols-5 lg:gap-6">
-            {h.process.steps.map((s, i) => (
-              <li key={s.name} className="reveal relative ps-20 lg:ps-0">
-                <span className="display absolute start-0 top-0 flex size-14 items-center justify-center rounded-full border border-accent bg-bg text-2xl text-accent lg:static">
-                  {i + 1}
-                </span>
-                <h3 className="display text-4xl lg:mt-8">{s.name}</h3>
-                <p className="mt-3 leading-relaxed text-muted">{s.line}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
+        <ol className="arc-track -mx-6 mt-12 md:-mx-10" tabIndex={0} aria-label={h.process.eyebrow}>
+          {h.process.steps.map((s, i) => (
+            <li key={s.name}>
+              <span className="display flex size-14 items-center justify-center rounded-full border border-accent bg-bg text-2xl text-accent">{i + 1}</span>
+              <h3 className="display mt-8 text-4xl">{s.name}</h3>
+              <p className="mt-3 leading-relaxed text-muted">{s.line}</p>
+            </li>
+          ))}
+        </ol>
       </Section>
+
+      {/* Sideways text */}
+      <div className="overflow-clip border-y border-line bg-bg py-10 text-fg" aria-hidden="true" dir="ltr">
+        {["slide-left", "slide-right outline-text"].map((cls) => (
+          <p key={cls} className={`slide-row display w-max italic ${cls}`}>
+            {h.ticker.join("  ◆  ")}
+          </p>
+        ))}
+      </div>
 
       {/* FAQ */}
       <Section tone="sand" eyebrow={h.faq.eyebrow} title={<Gilt h={h.faq.h} />}>
@@ -204,6 +217,9 @@ export default async function Home({ params }: LangParams) {
           ))}
         </div>
       </Section>
+
+      {/* Scroll-triggered demo of the inquiry form */}
+      <ScrollDemo t={t} product={product.name} />
 
       {/* Call to action */}
       <section data-tone="dark" className="relative overflow-hidden bg-bg text-fg">
